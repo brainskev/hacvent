@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
 import Layout from '@/components/Layout'
 import { ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react'
@@ -30,12 +30,14 @@ const initialState: FormState = {
 
 export default function CustomerIntake() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { isLoaded, isSignedIn, userId } = useAuth()
   const [currentStep, setCurrentStep] = useState(1)
   const [form, setForm] = useState<FormState>(initialState)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const stepChangeTimeRef = React.useRef<number>(0)
+  const isNewProject = searchParams?.get('new') === 'true'
 
   const totalSteps = 3
 
@@ -54,11 +56,14 @@ export default function CustomerIntake() {
     if (!isLoaded || !isSignedIn || !userId) return
     if (typeof window === 'undefined') return
 
-    const completed = window.localStorage.getItem(getIntakeStorageKey(userId))
-    if (completed) {
-      router.push('/customer-dashboard')
+    // Only redirect if not explicitly starting a new project
+    if (!isNewProject) {
+      const completed = window.localStorage.getItem(getIntakeStorageKey(userId))
+      if (completed) {
+        router.push('/customer-dashboard')
+      }
     }
-  }, [isLoaded, isSignedIn, userId, router])
+  }, [isLoaded, isSignedIn, userId, router, isNewProject])
 
   useEffect(() => {
     if (!isLoaded || !isSignedIn || !userId) return

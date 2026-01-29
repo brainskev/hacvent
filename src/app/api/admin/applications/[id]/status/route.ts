@@ -10,7 +10,7 @@ import { isValidTransition, statusLabels } from '@/lib/statusMachine'
  */
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { newStatus, reason, adminId } = await request.json()
+    const { newStatus, reason, adminId, override } = await request.json()
     const applicationId = new ObjectId(params.id)
 
     if (!newStatus || !adminId) {
@@ -32,7 +32,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
 
     // Validate transition
-    if (!isValidTransition(application.status, newStatus)) {
+    if (!override && !isValidTransition(application.status, newStatus)) {
       return NextResponse.json(
         {
           error: `Cannot transition from ${application.status} to ${newStatus}`
@@ -70,8 +70,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     // Create notification for customer
     const notificationsCollection = await getCollection<INotification>('notifications')
+    const recipientId = typeof application.customerId === 'string' 
+      ? application.customerId 
+      : application.customerId
+    
     await notificationsCollection.insertOne({
-      recipientId: application.customerId,
+      recipientId,
       senderId: new ObjectId(adminId),
       applicationId,
       type: 'status-update',

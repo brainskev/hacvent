@@ -75,7 +75,7 @@ export interface IUser {
  */
 export interface IApplication {
   _id?: ObjectId
-  customerId: ObjectId
+  customerId: ObjectId | string
   contractorId?: ObjectId
   applicationNumber: string
   status: ApplicationStatus
@@ -94,6 +94,13 @@ export interface IApplication {
   rejectedAt?: Date
   completedAt?: Date
   notes?: string
+  customerName?: string
+  customerPhone?: string
+  customerEmail?: string
+  projectSize?: string
+  preferredContactMethod?: string
+  rebatePortalEmail?: string
+  rebatePortalPassword?: string
 }
 
 /**
@@ -140,7 +147,7 @@ export interface IStatusChange {
  */
 export interface INotification {
   _id?: ObjectId
-  recipientId: ObjectId
+  recipientId: ObjectId | string
   senderId: ObjectId
   applicationId: ObjectId
   type:

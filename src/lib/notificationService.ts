@@ -62,16 +62,30 @@ export async function processPendingNotifications(): Promise<void> {
 
     for (const notification of pendingNotifications) {
       try {
-        // Get recipient email
-        const recipient = await usersCollection.findOne({ _id: notification.recipientId })
-        if (!recipient?.email) {
-          console.warn(`No email found for user ${notification.recipientId}`)
+        // Get recipient email - could be from users collection (ObjectId) or from application (Clerk ID)
+        let recipientEmail: string | null = null
+        
+        // Try to get email from users collection if recipientId is an ObjectId
+        if (typeof notification.recipientId !== 'string') {
+          const recipient = await usersCollection.findOne({ _id: notification.recipientId })
+          recipientEmail = recipient?.email
+        } else {
+          // For Clerk user IDs, get email from the application record
+          const applicationsCollection = await getCollection('applications')
+          const application = await applicationsCollection.findOne({
+            _id: notification.applicationId
+          })
+          recipientEmail = application?.customerEmail
+        }
+
+        if (!recipientEmail) {
+          console.warn(`No email found for notification recipient ${notification.recipientId}`)
           continue
         }
 
         // Send email based on notification type
         const emailSent = await sendEmail(
-          recipient.email,
+          recipientEmail,
           notification.subject,
           notification.body, // Would be formatted HTML in real implementation
           notification.body

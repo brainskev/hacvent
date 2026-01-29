@@ -27,6 +27,8 @@ export function DocumentPreviewModal({
     const userId = (window as any).__appContext?.userId
     if (!userId) return
     window.location.href = `/api/customer/documents/download/${documentId}?userId=${userId}`
+    // Close modal after initiating download
+    onClose()
   }
 
   return (

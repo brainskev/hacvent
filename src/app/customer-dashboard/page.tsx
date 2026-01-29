@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import Layout from '@/components/Layout'
 import { ProtectedPage } from '@/lib/auth'
-import { ApplicationStatus, IDocument } from '@/lib/types'
-import { mockApplications, mockNotifications } from '@/components/CustomerDashboard/mockData'
+import { ApplicationStatus, IDocument, IApplication } from '@/lib/types'
+import { mockNotifications } from '@/components/CustomerDashboard/mockData'
 import { DashboardHeader } from '@/components/CustomerDashboard/DashboardHeader'
 import { DashboardAlerts } from '@/components/CustomerDashboard/DashboardAlerts'
 import { SectionTabs, DashboardSection } from '@/components/CustomerDashboard/SectionTabs'
@@ -22,11 +22,10 @@ export default function CustomerDashboardPage() {
   const [activeSection, setActiveSection] = useState<DashboardSection>('timeline')
   const [documents, setDocuments] = useState<IDocument[]>([])
   const [isActionRequired, setIsActionRequired] = useState(true)
-  const [applications, setApplications] = useState(mockApplications)
-  const [selectedApplicationId, setSelectedApplicationId] = useState(
-    mockApplications[0]?._id?.toString() || ''
-  )
+  const [applications, setApplications] = useState<IApplication[]>([])
+  const [selectedApplicationId, setSelectedApplicationId] = useState<string>('')
   const [notifications, setNotifications] = useState(mockNotifications)
+  const [applicationsLoading, setApplicationsLoading] = useState(true)
 
   const userName = isLoaded && user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User' : 'Loading...'
   const userEmail = isLoaded && user ? user.emailAddresses[0]?.emailAddress : ''
@@ -52,6 +51,33 @@ export default function CustomerDashboardPage() {
       )
     )
   }
+
+  // Fetch applications for current user
+  useEffect(() => {
+    if (!isLoaded || !user) return
+
+    const fetchApplications = async () => {
+      try {
+        setApplicationsLoading(true)
+        const response = await fetch(`/api/customer/applications?userId=${user.id}`)
+        if (response.ok) {
+          const data = await response.json()
+          if (data.success && data.applications && data.applications.length > 0) {
+            setApplications(data.applications)
+            // Select the most recent application (from intake submission)
+            const recentApp = data.applications[0]
+            setSelectedApplicationId(recentApp._id?.toString() || '')
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch applications:', err)
+      } finally {
+        setApplicationsLoading(false)
+      }
+    }
+
+    fetchApplications()
+  }, [isLoaded, user])
 
   useEffect(() => {
     if (!searchParams) return
@@ -131,7 +157,7 @@ export default function CustomerDashboardPage() {
   }
 
   const handleNewProject = () => {
-    router.push('/customer-intake')
+    router.push('/customer-intake?new=true')
   }
 
   return (

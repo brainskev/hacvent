@@ -78,7 +78,7 @@ export default function ApplicationReceived() {
                     </div>
                     <div>
                       <p className="font-semibold">Upload Required Documents</p>
-                      <p className="text-sm text-white/80">Tax returns, utility bills, property documents</p>
+                      <p className="text-sm text-white/80">Income and property documents</p>
                     </div>
                   </div>
                   
@@ -88,7 +88,7 @@ export default function ApplicationReceived() {
                     </div>
                     <div>
                       <p className="font-semibold">We Verify Eligibility</p>
-                      <p className="text-sm text-white/80">Our team reviews your documents (24-48 hours)</p>
+                      <p className="text-sm text-white/80">Our team reviews your documents and checks eligibility (24-48 hours)</p>
                     </div>
                   </div>
                   
@@ -98,7 +98,7 @@ export default function ApplicationReceived() {
                     </div>
                     <div>
                       <p className="font-semibold">Get Matched with Contractors</p>
-                      <p className="text-sm text-white/80">Connect with certified installers in your area</p>
+                      <p className="text-sm text-white/80">If eligible,we connect you with certified installers in your area</p>
                     </div>
                   </div>
                 </div>
