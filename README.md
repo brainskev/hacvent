@@ -4,19 +4,21 @@
 
 ThermoGrid is a modern web platform built with Next.js that helps homeowners navigate HVAC rebate programs, connects them with certified contractors, and streamlines the rebate application process.
 
-![ThermoGrid](https://via.placeholder.com/1200x400/4CAF50/FFFFFF?text=ThermoGrid+-+HVAC+Rebates+Made+Easy)
+![Hacvent](https://via.placeholder.com/1200x400/4CAF50/FFFFFF?text=Hacvent+-+HVAC+Rebates+Made+Easy)
 
 ## ✨ Features
 
 ### 🎯 Hybrid Matching System
+
 - **Smart Contractor Matching**: Automated shortlisting based on location, certifications, ratings, and availability
 - **Customer Selection Control**: Customers review shortlisted contractors and choose their preferred professional
 - **Privacy Protection**: Sensitive customer details hidden until contractor is selected
 - **Dual Dashboard System**: Separate optimized experiences for customers and contractors
 
 ### For Customers
+
 - **🏠 Homepage**: Eye-catching landing page with hero banner, FAQ section, and eligibility checker
-- **📊 Enhanced Dashboard**: 
+- **📊 Enhanced Dashboard**:
   - View complete rebate eligibility results with program breakdown
   - Browse shortlisted contractors with ratings, certifications, and experience
   - Select preferred contractor from matched professionals
@@ -29,20 +31,22 @@ ThermoGrid is a modern web platform built with Next.js that helps homeowners nav
 - **🔔 Notification System**: Bell icon with unread count, dropdown notification center
 
 ### For Contractors
-- **🔧 Contractor Dashboard**: 
+
+- **🔧 Contractor Dashboard**:
   - View shortlisted and selected projects
   - Access limited details for shortlisted projects (privacy-protected)
   - Full customer contact info once selected
   - Filter projects by status (Shortlisted, Selected, In Progress)
   - Search functionality for projects
   - Real-time notifications for new matches
-- **📋 Project Visibility System**: 
+- **📋 Project Visibility System**:
   - **Shortlisted**: See project requirements and rebate value, but limited customer info
   - **Selected**: Full access to customer contact details and project information
 - **💼 Project Management**: Track installation progress, upload documents, update status
 - **💰 Revenue Tracking**: View total value of active projects
 
 ### Design & UX
+
 - **🎨 Renewable Energy Theme**: Green (#4CAF50), Blue (#2196F3), and neutral color scheme
 - **📱 Fully Responsive**: Optimized for mobile, tablet, and desktop devices
 - **✨ Smooth Animations**: Fade-in, slide-up, and transition effects throughout
@@ -58,18 +62,21 @@ ThermoGrid is a modern web platform built with Next.js that helps homeowners nav
 ## 📦 Installation
 
 ### Prerequisites
+
 - Node.js 18.x or higher
 - npm or yarn package manager
 
 ### Setup Steps
 
 1. **Clone the repository**
+
    ```bash
-   git clone https://github.com/yourusername/thermogrid.git
-   cd thermogrid
+   git clone https://github.com/yourusername/hacvent.git
+   cd hacvent
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -77,6 +84,7 @@ ThermoGrid is a modern web platform built with Next.js that helps homeowners nav
    ```
 
 3. **Run the development server**
+
    ```bash
    npm run dev
    # or
@@ -89,7 +97,7 @@ ThermoGrid is a modern web platform built with Next.js that helps homeowners nav
 ## 🏗️ Project Structure
 
 ```
-thermogrid/
+hacvent/
 ├── components/                    # Reusable React components
 │   ├── Header.tsx                # Main navigation header with notifications
 │   ├── Footer.tsx                # Site footer with links
@@ -129,28 +137,31 @@ thermogrid/
 ## 🎯 Key Pages
 
 ### Homepage (`/`)
+
 - Hero section with main value proposition
 - Eligibility checker form
 - FAQ section with most common questions
 - Call-to-action section with feature highlights
 
 ### Customer Dashboard (`/dashboard`)
-- **Overview Tab**: 
+
+- **Overview Tab**:
   - Project timeline with visual progress steps
   - Rebate eligibility summary with program breakdown
   - Total savings calculation
   - Quick actions sidebar
-- **Contractors Tab**: 
+- **Contractors Tab**:
   - Shortlisted contractor cards with ratings and certifications
   - Contractor selection interface
   - Consultation request functionality
   - Privacy-protected browsing
-- **Documents Tab**: 
+- **Documents Tab**:
   - Rebate application status tracker
   - Document upload center with drag-and-drop
   - Required documents checklist
 
 ### Contractor Dashboard (`/contractor-dashboard`)
+
 - Project filtering (All, Shortlisted, Selected, In Progress)
 - Search functionality for projects
 - Project cards with visibility controls:
@@ -161,6 +172,7 @@ thermogrid/
 - Active project progress tracking
 
 ### Project Details (`/project/[id]`)
+
 - Comprehensive project information view
 - Works for both customers and contractors
 - **Overview Tab**: Timeline, requirements, rebate programs
@@ -169,11 +181,13 @@ thermogrid/
 - Context-aware sidebar (contractor info for customers, customer info for contractors)
 
 ### Contractor Portal (`/contractor`)
+
 - Sign-up form for new contractors
 - Verification status tracking
 - Certification options and rebate specialist program
 
 ### FAQ Page (`/faq`)
+
 - Searchable FAQ database (23+ questions)
 - Category filtering (General, Eligibility, Application, etc.)
 - Expandable/collapsible question cards
@@ -204,6 +218,7 @@ colors: {
 ```
 
 Custom utility classes are available in `styles/globals.css`:
+
 - `.btn-primary` - Primary button style
 - `.btn-secondary` - Secondary button style
 - `.btn-outline` - Outlined button style
@@ -215,6 +230,7 @@ Custom utility classes are available in `styles/globals.css`:
 The following areas are ready for backend API integration:
 
 ### 🎯 Matching System
+
 - **Contractor Matching Algorithm** (`pages/dashboard.tsx`):
   - `contractorShortlist` - Auto-generate based on location, certifications, ratings
   - Scoring algorithm: proximity, certification match, availability, customer ratings
@@ -226,39 +242,37 @@ The following areas are ready for backend API integration:
   - Update project visibility for contractor
 
 ### Customer Features
+
 - **Eligibility Checker** (`components/EligibilityChecker.tsx`):
   - `handleSubmit()` - Check rebate eligibility based on ZIP, home type, and system age
   - Return eligible programs, requirements, and total savings
-  
 - **Dashboard** (`pages/dashboard.tsx`):
   - `eligibilityResult` - Fetch customer's rebate eligibility
   - `contractorShortlist` - Get matched contractors (top 3-5)
   - `projectSteps` - Fetch project timeline and current status
   - `notifications` - Real-time notification feed
-  
 - **Rebate Tracker** (`components/RebateTracker.tsx`):
   - Replace `mockRebates` with API call to fetch user's rebate applications
-  
 - **Document Upload** (`components/DocumentUpload.tsx`):
   - `handleDrop()` and `handleFileInput()` - Upload files to cloud storage (S3/Azure)
   - `removeFile()` - Delete uploaded documents
 
 ### Contractor Features
+
 - **Contractor Dashboard** (`pages/contractor-dashboard.tsx`):
   - `projects` - Fetch projects where contractor is shortlisted or selected
   - `handleAcceptProject()` - Accept selected project and confirm availability
   - `handleRequestInfo()` - Request additional project details from customer
   - `notifications` - New project matches and customer selections
-  
 - **Project Visibility** (`components/ProjectCard.tsx`):
   - Enforce privacy rules: limited view for shortlisted, full view for selected
   - Real-time updates when customer selects contractor
-  
 - **Contractor Sign-Up** (`pages/contractor.tsx`):
   - `handleSubmit()` in `ContractorSignUpForm` - Submit contractor application
   - Upload certifications and licenses
 
 ### Project Management
+
 - **Project Details** (`pages/project/[id].tsx`):
   - Fetch project by ID with role-based access control
   - Update project status and milestones
@@ -266,6 +280,7 @@ The following areas are ready for backend API integration:
   - Messaging/communication logs
 
 ### Notifications
+
 - **NotificationCenter** (`components/NotificationCenter.tsx`):
   - Real-time push notifications (WebSocket/Server-Sent Events)
   - Mark as read/unread
@@ -273,12 +288,14 @@ The following areas are ready for backend API integration:
   - Types: contractor selection, document requests, rebate approvals, etc.
 
 ### Authentication & Authorization
+
 - Header component includes login/signup links
 - Dashboard pages need authentication guards
 - Role-based access: customer vs contractor views
 - Session management and JWT tokens
 
 ### Suggested Backend Endpoints
+
 ```
 # Eligibility & Matching
 POST   /api/eligibility/check           - Check rebate eligibility
@@ -339,23 +356,23 @@ npm run lint     # Run ESLint
 3. Add navigation link in `components/Header.tsx`
 
 Example:
+
 ```tsx
-import Layout from '@/components/Layout'
+import Layout from "@/components/Layout";
 
 export default function NewPage() {
   return (
     <Layout>
-      <div className="container-custom py-12">
-        {/* Your content */}
-      </div>
+      <div className="container-custom py-12">{/* Your content */}</div>
     </Layout>
-  )
+  );
 }
 ```
 
 ## 📱 Responsive Design
 
 All components are responsive with mobile-first design:
+
 - **Mobile**: < 768px (stacked layouts, hamburger menu)
 - **Tablet**: 768px - 1023px (2-column grids)
 - **Desktop**: ≥ 1024px (3-4 column grids, full features)
@@ -363,6 +380,7 @@ All components are responsive with mobile-first design:
 ## 🎭 Sample Data
 
 The application includes mock data for demonstration:
+
 - 3 sample rebate applications in the dashboard
 - 1 sample contractor profile
 - 23 FAQ entries across 8 categories
@@ -373,13 +391,16 @@ Replace mock data with real API calls for production.
 ## 🚢 Deployment
 
 ### Vercel (Recommended)
+
 ```bash
 npm install -g vercel
 vercel
 ```
 
 ### Other Platforms
+
 Build the project and deploy the `.next` folder:
+
 ```bash
 npm run build
 npm run start
@@ -390,11 +411,13 @@ npm run start
 Create a `.env.local` file for environment-specific configuration:
 
 ```env
-NEXT_PUBLIC_API_URL=https://api.thermogrid.com
+NEXT_PUBLIC_API_URL=https://api.hacvent.com
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=your_key_here
-DATABASE_URL=your_database_url
-JWT_SECRET=your_jwt_secret
+MONGODB_URI=mongodb+srv://<user>:<pass>@<cluster-url>/?retryWrites=true&w=majority
+MONGODB_DB=hacvent
 ```
+
+Note: Supabase variables are no longer required for intake endpoints.
 
 ## 📄 License
 
@@ -403,6 +426,7 @@ This project is licensed under the MIT License.
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
@@ -412,13 +436,15 @@ Contributions are welcome! Please follow these steps:
 ## 📞 Support
 
 For questions or support:
-- 📧 Email: support@thermogrid.com
+
+- 📧 Email: support@hacvent.com
 - 📱 Phone: 1-800-555-1234
-- 🌐 Website: [www.thermogrid.com](https://thermogrid.com)
+- 🌐 Website: [www.hacvent.com](https://hacvent.com)
 
 ## 🔐 Security & Privacy Features
 
 ### Privacy-Protected Matching
+
 - **Shortlisted Phase**: Contractors see project requirements and rebate value, but NOT:
   - Customer name
   - Exact address (only city/ZIP)
@@ -432,6 +458,7 @@ For questions or support:
   - Direct communication channels
 
 ### Data Protection
+
 - Document uploads should use encrypted cloud storage
 - Customer PII protected until contractor selection
 - Role-based access control for all API endpoints
@@ -441,6 +468,7 @@ For questions or support:
 ## 🚀 How the Matching System Works
 
 ### For Customers:
+
 1. **Check Eligibility** → Enter ZIP, home type, system age
 2. **View Results** → See total savings and eligible programs
 3. **Review Contractors** → Browse 3-5 matched professionals with ratings
@@ -449,6 +477,7 @@ For questions or support:
 6. **Track Progress** → Monitor each stage from order to approval
 
 ### For Contractors:
+
 1. **Complete Verification** → Submit licenses and certifications
 2. **Get Matched** → Automatically shortlisted for relevant projects
 3. **Review Projects** → See limited details of potential jobs
@@ -457,6 +486,7 @@ For questions or support:
 6. **Execute Project** → Install system and help with rebate documentation
 
 ### Matching Algorithm Factors:
+
 - **Location/Proximity**: Distance from customer property
 - **Certifications**: EPA 608, NATE, rebate specialist credentials
 - **Experience**: Years in business, completed projects
@@ -467,6 +497,7 @@ For questions or support:
 ## 🗺️ Roadmap
 
 ### ✅ Completed (Current Release)
+
 - [x] Hybrid matching system with privacy protection
 - [x] Customer dashboard with contractor selection
 - [x] Contractor dashboard with project visibility controls
@@ -477,6 +508,7 @@ For questions or support:
 - [x] Responsive design for all devices
 
 ### 🚧 In Development
+
 - [ ] User authentication with JWT and role-based access
 - [ ] Real-time messaging between customers and contractors
 - [ ] WebSocket integration for live notifications
@@ -485,6 +517,7 @@ For questions or support:
 - [ ] Mobile-responsive improvements
 
 ### 📋 Planned Features
+
 - [ ] Admin dashboard for managing users and applications
 - [ ] Email notifications for all project milestones
 - [ ] SMS alerts for time-sensitive updates
@@ -500,4 +533,4 @@ For questions or support:
 
 ---
 
-Built with ♥️ by the ThermoGrid Team | Empowering energy efficiency nationwide 🌿
+Built with ♥️ by the Hacvent Team | Empowering energy efficiency nationwide 🌿
