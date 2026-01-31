@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
 import Layout from '@/components/Layout'
@@ -28,7 +28,7 @@ const initialState: FormState = {
   preferred_contact_method: 'email',
 }
 
-export default function CustomerIntake() {
+function CustomerIntakeContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { isLoaded, isSignedIn, userId } = useAuth()
@@ -80,11 +80,9 @@ export default function CustomerIntake() {
   // Show loading state while checking auth
   if (!isLoaded) {
     return (
-      <Layout>
-        <div className="container-custom py-14 text-center">
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </Layout>
+      <div className="container-custom py-14 text-center">
+        <p className="text-gray-600">Loading...</p>
+      </div>
     )
   }
 
@@ -177,7 +175,7 @@ export default function CustomerIntake() {
   }
 
   return (
-    <Layout>
+    <>
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary to-secondary py-12 md:py-14">
         <div className="container-custom text-white text-center">
@@ -424,6 +422,16 @@ export default function CustomerIntake() {
           </form>
         </div>
       </div>
+    </>
+  )
+}
+
+export default function CustomerIntake() {
+  return (
+    <Layout>
+      <Suspense fallback={<div className="container-custom py-14 text-center" />}>
+        <CustomerIntakeContent />
+      </Suspense>
     </Layout>
   )
 }

@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Layout from '@/components/Layout'
 import { CheckCircle, Clock, FileText, Shield, DollarSign } from 'lucide-react'
 
-export default function ContractorApplicationReceived() {
+function ContractorApplicationReceivedContent() {
   const searchParams = useSearchParams()
   const [referenceId, setReferenceId] = useState<string>('')
   const referenceCode = useMemo(() => {
@@ -24,7 +24,7 @@ export default function ContractorApplicationReceived() {
   }, [searchParams])
 
   return (
-    <Layout>
+    <>
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-blue-700 py-12 md:py-16">
         <div className="container-custom text-white text-center">
@@ -172,6 +172,16 @@ export default function ContractorApplicationReceived() {
           </div>
         </div>
       </div>
+    </>
+  )
+}
+
+export default function ContractorApplicationReceived() {
+  return (
+    <Layout>
+      <Suspense fallback={<div className="container-custom py-10 md:py-14" />}>
+        <ContractorApplicationReceivedContent />
+      </Suspense>
     </Layout>
   )
 }

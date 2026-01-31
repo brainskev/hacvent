@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import Layout from '@/components/Layout'
@@ -15,7 +15,7 @@ import { TimelineSection } from '@/components/CustomerDashboard/TimelineSection'
 import { DocumentsSection } from '@/components/CustomerDashboard/DocumentsSection'
 import { NotificationsSection } from '@/components/CustomerDashboard/NotificationsSection'
 
-export default function CustomerDashboardPage() {
+function CustomerDashboardContent() {
   const { user, isLoaded } = useUser()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -161,54 +161,62 @@ export default function CustomerDashboardPage() {
   }
 
   return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
+      <DashboardHeader isLoaded={isLoaded} userName={userName} userEmail={userEmail} />
+      <DashboardAlerts
+        intakeCompleted={intakeCompleted}
+        applicationStatus={selectedApplication?.status}
+        documentsCount={documents.length}
+        activeSection={activeSection}
+        onViewDocuments={() => setActiveSection('documents')}
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <ProjectSelector
+          applications={applications}
+          selectedApplicationId={selectedApplicationId}
+          onChange={setSelectedApplicationId}
+          onNewProject={handleNewProject}
+        />
+        <SectionTabs activeSection={activeSection} onChange={setActiveSection} />
+
+        {activeSection === 'timeline' && selectedApplication && (
+          <TimelineSection
+            application={selectedApplication}
+            onNavigateToActions={() => setActiveSection('documents')}
+          />
+        )}
+
+        {activeSection === 'documents' && selectedApplication && (
+          <DocumentsSection
+            applicationStatus={selectedApplication.status}
+            isActionRequired={isActionRequired}
+            documents={documents}
+            onUpload={handleFileUpload}
+            onDocumentsRefresh={handleDocumentsRefresh}
+          />
+        )}
+
+        {activeSection === 'notifications' && (
+          <NotificationsSection
+            notifications={notifications.filter(
+              (notification) => notification.applicationId?.toString() === selectedApplicationId
+            )}
+            onMarkAsRead={handleMarkNotificationRead}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default function CustomerDashboardPage() {
+  return (
     <ProtectedPage>
       <Layout>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
-          <DashboardHeader isLoaded={isLoaded} userName={userName} userEmail={userEmail} />
-          <DashboardAlerts
-            intakeCompleted={intakeCompleted}
-            applicationStatus={selectedApplication?.status}
-            documentsCount={documents.length}
-            activeSection={activeSection}
-            onViewDocuments={() => setActiveSection('documents')}
-          />
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <ProjectSelector
-              applications={applications}
-              selectedApplicationId={selectedApplicationId}
-              onChange={setSelectedApplicationId}
-              onNewProject={handleNewProject}
-            />
-            <SectionTabs activeSection={activeSection} onChange={setActiveSection} />
-
-            {activeSection === 'timeline' && selectedApplication && (
-              <TimelineSection
-                application={selectedApplication}
-                onNavigateToActions={() => setActiveSection('documents')}
-              />
-            )}
-
-            {activeSection === 'documents' && selectedApplication && (
-              <DocumentsSection
-                applicationStatus={selectedApplication.status}
-                isActionRequired={isActionRequired}
-                documents={documents}
-                onUpload={handleFileUpload}
-                onDocumentsRefresh={handleDocumentsRefresh}
-              />
-            )}
-
-            {activeSection === 'notifications' && (
-              <NotificationsSection
-                notifications={notifications.filter(
-                  (notification) => notification.applicationId?.toString() === selectedApplicationId
-                )}
-                onMarkAsRead={handleMarkNotificationRead}
-              />
-            )}
-          </div>
-        </div>
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50" />}>
+          <CustomerDashboardContent />
+        </Suspense>
       </Layout>
     </ProtectedPage>
   )
