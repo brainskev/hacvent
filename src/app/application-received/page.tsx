@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@clerk/nextjs'
 import Layout from '@/components/Layout'
 import { CheckCircle, ArrowRight, FileText, Clock, AlertCircle, Home, Mail } from 'lucide-react'
 
-export default function ApplicationReceived() {
+function ApplicationReceivedContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { isLoaded, isSignedIn } = useAuth()
@@ -41,7 +41,7 @@ export default function ApplicationReceived() {
   }
 
   return (
-    <Layout>
+    <>
       {/* Success Banner */}
       <section className="bg-gradient-to-br from-emerald-600 to-emerald-700 py-10 md:py-14">
         <div className="container-custom text-white text-center">
@@ -244,6 +244,16 @@ export default function ApplicationReceived() {
           </div>
         </div>
       </div>
+    </>
+  )
+}
+
+export default function ApplicationReceived() {
+  return (
+    <Layout>
+      <Suspense fallback={<div className="container-custom py-10 md:py-14" />}> 
+        <ApplicationReceivedContent />
+      </Suspense>
     </Layout>
   )
 }

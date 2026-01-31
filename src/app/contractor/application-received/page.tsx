@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Layout from '@/components/Layout'
 import { CheckCircle, Clock, FileText, Shield, DollarSign } from 'lucide-react'
@@ -8,6 +8,11 @@ import { CheckCircle, Clock, FileText, Shield, DollarSign } from 'lucide-react'
 export default function ContractorApplicationReceived() {
   const searchParams = useSearchParams()
   const [referenceId, setReferenceId] = useState<string>('')
+  const referenceCode = useMemo(() => {
+    if (!referenceId) return ''
+    const suffix = referenceId.replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase()
+    return `HV-${suffix}`
+  }, [referenceId])
 
   useEffect(() => {
     if (searchParams) {
@@ -35,11 +40,11 @@ export default function ContractorApplicationReceived() {
       <div className="container-custom py-10 md:py-14">
         <div className="max-w-3xl mx-auto">
           {/* Reference ID Card */}
-          {referenceId && (
+          {referenceCode && (
             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-6 mb-8 border-l-4 border-secondary">
-              <h2 className="text-sm font-semibold text-gray-600 mb-1">Your Application Reference ID</h2>
-              <p className="text-2xl font-bold text-gray-900 tracking-wide font-mono">{referenceId}</p>
-              <p className="text-sm text-gray-600 mt-2">Please save this ID for tracking your application status</p>
+              <h2 className="text-sm font-semibold text-gray-600 mb-1">Your Application Reference Code</h2>
+              <p className="text-2xl font-bold text-secondary tracking-widest font-mono">{referenceCode}</p>
+              <p className="text-sm text-gray-600 mt-2">Please save this code for tracking your application status</p>
             </div>
           )}
 
