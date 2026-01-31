@@ -2,8 +2,9 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth, useClerk } from '@clerk/nextjs'
-import { Menu, X, Leaf, LogOut } from 'lucide-react'
+import { Menu, X, LogOut } from 'lucide-react'
 
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
@@ -15,13 +16,19 @@ const Header: React.FC = () => {
       <nav className="container-custom py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="bg-gradient-primary p-1.5 sm:p-2 rounded-lg group-hover:scale-110 transition-transform duration-300">
-              <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+              <Image
+                src="/hacvent-logo.svg"
+                alt="Hacvent - HVAC Rebate Service"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <span className="text-xl sm:text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-              ThermoGrid
-            </span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-2xl sm:text-3xl lg:text-4xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Hacvent</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

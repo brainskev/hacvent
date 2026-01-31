@@ -1,0 +1,23 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#F0F9FF" stroke="#10B981" stroke-width="3"/>
+  
+  <!-- Hexagon polygon (eco-friendly green) - Bolder -->
+  <polygon points="100,35 155,65 155,135 100,165 45,135 45,65" fill="#10B981" fill-opacity="0.1" stroke="#10B981" stroke-width="5" stroke-linejoin="round"/>
+  
+  <!-- Bold Zap/Lightning bolt in center -->
+  <g id="zap-bolt" transform="translate(100, 100)">
+    <!-- Main lightning bolt - Bold and thick -->
+    <path d="M 0 -35 L -15 -5 L 5 -5 L -20 35 L 10 10 L -5 10 Z" fill="#FFB703" stroke="#FF8C00" stroke-width="2" stroke-linejoin="round"/>
+    <!-- Highlight for depth -->
+    <path d="M 0 -30 L -10 -5 L 3 -5 L -15 28 L 8 10 L -2 10 Z" fill="#FFF" opacity="0.4"/>
+  </g>
+  
+  <!-- Energy dots around polygon - Bigger and bolder -->
+  <circle cx="100" cy="30" r="5" fill="#FFB703" opacity="0.9"/>
+  <circle cx="160" cy="70" r="5" fill="#10B981" opacity="0.9"/>
+  <circle cx="160" cy="130" r="5" fill="#FFB703" opacity="0.9"/>
+  <circle cx="100" cy="170" r="5" fill="#10B981" opacity="0.9"/>
+  <circle cx="40" cy="130" r="5" fill="#FFB703" opacity="0.9"/>
+  <circle cx="40" cy="70" r="5" fill="#10B981" opacity="0.9"/>
+</svg>

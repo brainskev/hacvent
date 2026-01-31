@@ -35,8 +35,8 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
   return (
     <>
       <Head>
-        <title>{`${title} | ThermoGrid Admin`}</title>
-        <meta name="description" content="Admin dashboard for ThermoGrid HVAC rebate platform" />
+        <title>{`${title} | Hacvent Admin`}</title>
+        <meta name="description" content="Admin dashboard for Hacvent HVAC rebate platform" />
       </Head>
 
       <div className="min-h-screen bg-gray-50">
@@ -60,7 +60,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
               <div className="bg-gradient-primary p-2 rounded-lg">
                 <LayoutDashboard className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-bold">ThermoGrid Admin</span>
+              <span className="text-xl font-bold">Hacvent Admin</span>
             </Link>
             <button 
               className="lg:hidden text-gray-400 hover:text-white"
