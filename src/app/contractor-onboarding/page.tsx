@@ -217,23 +217,23 @@ export default function ContractorOnboarding() {
                       required
                     />
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 className="font-semibold text-blue-900 mb-2 text-sm">Application Review Process</h4>
                     <ul className="space-y-2 text-blue-800 text-sm">
                       <li className="flex items-start">
                         <span className="mr-2">1.</span>
-                        <span>We'll verify your license against the Michigan state rebates portal</span>
+                        <span> We confirm your status with applicable energy-efficiency and rebate programs.</span>
                       </li>
                       <li className="flex items-start">
                         <span className="mr-2">2.</span>
-                        <span>If already approved for rebate programs, you'll get instant access</span>
+                        <span>If already approved for rebate programs, you'll start receiving qualified customer matches immediately.</span>
                       </li>
                       <li className="flex items-start">
                         <span className="mr-2">3.</span>
-                        <span>If not approved, we'll handle the approval process for you (may include approval fee)</span>
+                        <span>If not approved, we'll handle the approval process for you. (We charge a small fee)</span>
                       </li>
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
               )}
 

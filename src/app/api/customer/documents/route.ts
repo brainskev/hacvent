@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ObjectId } from 'mongodb'
 import { getApplicationDocumentsForUser } from '@/lib/documentService'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/customer/documents?applicationId={id}&userId={id}
  * Retrieve all documents for an application owned by the user
