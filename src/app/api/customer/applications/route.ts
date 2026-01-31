@@ -3,6 +3,8 @@ import { getCollection } from '@/lib/mongodb'
 import { IApplication } from '@/lib/types'
 import { ObjectId } from 'mongodb'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/customer/applications
  * Fetch all applications for the current user
