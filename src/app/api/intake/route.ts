@@ -34,12 +34,29 @@ export async function POST(request: NextRequest) {
     const count = await applications.countDocuments()
     const applicationNumber = `APP-${String(count + 1).padStart(3, '0')}`
 
+    // Calculate preliminary eligibility score based on available information
+    // This provides a more encouraging initial score than 0
+    let preliminaryScore = 0.5 // Base score of 50% for applying
+    
+    // Adjust based on HVAC type (heat pumps and electric HVAC qualify for HEEHRA)
+    if (hvac_type === 'heat_pump' || hvac_type === 'electric_hvac') {
+      preliminaryScore += 0.2 // Boost for qualifying system type
+    }
+    
+    // Adjust based on property type (homeowners more likely to qualify)
+    if (property_type === 'single-family' || property_type === 'single_family') {
+      preliminaryScore += 0.1
+    }
+    
+    // Cap at 0.75 until documents are verified
+    preliminaryScore = Math.min(preliminaryScore, 0.75)
+
     // Create application with DOCUMENTS_REQUESTED status
     const applicationPayload = {
       applicationNumber,
       customerId: userId,
       status: ApplicationStatus.DOCUMENTS_REQUESTED,
-      eligibilityScore: 0,
+      eligibilityScore: preliminaryScore,
       requestedAmount: 0,
       serviceArea: property_address,
       currentUtility: 'TBD',

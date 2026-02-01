@@ -92,6 +92,10 @@ export default function EligibilityCheck() {
           <p className="text-sm md:text-base text-white/90 max-w-2xl mx-auto">
             Answer a few questions to see if you may qualify for available rebate and incentive programs based on your location and household details.
           </p>
+          <div className="mt-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-4 max-w-xl mx-auto">
+            <p className="text-base font-bold text-white mb-1">💰 Up to $8,000–$14,000 Available</p>
+            <p className="text-sm text-white/90">State-administered income-qualified rebates (HEEHRA) for electric HVAC systems, often combining with local utility rebates for even deeper savings</p>
+          </div>
           <p className="text-xs text-white/70 mt-3">This takes less than a minute</p>
         </div>
       </section>
@@ -183,24 +187,31 @@ export default function EligibilityCheck() {
                     <p className="text-green-800 mt-2 font-semibold">You may be eligible for rebate and incentive programs.</p>
                   </div>
                   <div className="p-6 md:p-8">
+                    <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 rounded-lg p-5 mb-6">
+                      <p className="text-2xl font-bold text-emerald-700 mb-2">🎉 $8,000–$14,000 in Rebates Possible!</p>
+                      <p className="text-sm text-emerald-900">You may qualify for state-administered income-qualified rebates (HEEHRA) for electric HVAC upgrades, plus additional local utility rebates!</p>
+                    </div>
                     <div className="mb-6 space-y-3">
                       <div className="flex items-start">
                         <span className="text-green-600 font-bold mr-2 flex-shrink-0">✓</span>
-                        <p className="text-gray-700 text-sm">Based on your income level and upgrade type, you appear to qualify for multiple rebate programs.</p>
+                        <p className="text-gray-700 text-sm">Based on your income level and upgrade type, you appear to qualify for <strong>multiple federal and state rebate programs</strong>.</p>
                       </div>
                       <div className="flex items-start">
                         <span className="text-green-600 font-bold mr-2 flex-shrink-0">✓</span>
-                        <p className="text-gray-700 text-sm">Potential savings range from <strong>$1,000 - $8,000+</strong> depending on system type and efficiency.</p>
+                        <p className="text-gray-700 text-sm"><strong>HEEHRA rebates alone can cover $8,000–$14,000</strong> for electric heat pumps and HVAC systems. When combined with local utility rebates, you could save even more!</p>
                       </div>
                       <div className="flex items-start">
                         <span className="text-green-600 font-bold mr-2 flex-shrink-0">✓</span>
-                        <p className="text-gray-700 text-sm">We'll connect you with approved contractors who can help maximize your rebates.</p>
+                        <p className="text-gray-700 text-sm">We'll connect you with approved contractors who can help <strong>maximize your total rebates</strong> and handle all the paperwork.</p>
                       </div>
                     </div>
 
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                      <h3 className="font-semibold text-blue-900 mb-2 text-sm">Next Step</h3>
-                      <p className="text-blue-800 text-sm">Complete the full intake form so we can verify your eligibility and match you with qualified contractors.</p>
+                    <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 mb-6">
+                      <h3 className="font-semibold text-blue-900 mb-2 text-sm flex items-center gap-2">
+                        📋 Critical Next Step - Don't Miss Out!
+                      </h3>
+                      <p className="text-blue-800 text-sm mb-2"><strong>Complete your application and upload required documents</strong> to lock in your rebate eligibility. Without proper documentation, you cannot claim these valuable rebates.</p>
+                      <p className="text-blue-700 text-xs">⏱️ Processing time: 24-48 hours after document upload</p>
                     </div>
 
                     <button onClick={handleContinue} className="w-full btn-primary py-3 text-base flex items-center justify-center gap-2">

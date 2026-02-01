@@ -18,6 +18,9 @@ const Hero: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="text-white animate-fade-in">
+            <div className="inline-block bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 mb-4">
+              <p className="text-sm font-semibold">💰 Up to $8,000–$14,000 in HEEHRA Rebates Available</p>
+            </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               Get Approved for Energy-Efficient HVAC Rebates Easily
             </h1>
@@ -82,8 +85,8 @@ const Hero: React.FC = () => {
               {/* Stats Cards */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/30 hover:bg-white/30 transition-colors duration-300">
-                  <div className="text-2xl sm:text-3xl font-bold text-white">$5K+</div>
-                  <div className="text-xs sm:text-sm text-white/80">Avg. Rebate</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-white">$8K–$14K</div>
+                  <div className="text-xs sm:text-sm text-white/80">HEEHRA Rebates</div>
                 </div>
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/30 hover:bg-white/30 transition-colors duration-300">
                   <div className="text-2xl sm:text-3xl font-bold text-white">10K+</div>

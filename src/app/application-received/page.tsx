@@ -66,9 +66,13 @@ function ApplicationReceivedContent() {
             <div className="md:col-span-2 space-y-6">
               {/* Primary CTA Card */}
               <div className="bg-gradient-to-br from-primary to-secondary rounded-xl p-8 text-white shadow-lg">
+                <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-4 mb-6">
+                  <p className="text-2xl font-bold text-white mb-2">🎉 Up to $8,000–$14,000 in Rebates!</p>
+                  <p className="text-sm text-white/95">State-administered income-qualified rebates (HEEHRA) for electric HVAC systems can provide substantial savings. Combined with local utility rebates, your total savings could be even higher!</p>
+                </div>
                 <h2 className="text-2xl font-bold mb-3">What's Next?</h2>
                 <p className="text-white/90 mb-6">
-                  Your application is in our queue. To move forward, we need supporting documents to verify your eligibility.
+                  Your application is in our queue. <strong>To claim these rebates and move forward, we need supporting documents to verify your eligibility.</strong> Don't leave money on the table!
                 </p>
                 
                 <div className="space-y-4 mb-6">
@@ -175,11 +179,12 @@ function ApplicationReceivedContent() {
             {/* Sidebar - Quick Info */}
             <div className="space-y-4">
               {/* Required Documents */}
-              <div className="bg-blue-50 rounded-xl border border-blue-200 p-4">
-                <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                  <FileText className="w-4 h-4" />
-                  Documents Needed
+              <div className="bg-blue-50 rounded-xl border-2 border-blue-300 p-4 shadow-sm">
+                <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Documents Needed 🔒
                 </h4>
+                <p className="text-xs text-blue-800 font-semibold mb-3">⚠️ Required to claim $8,000–$14,000 in rebates</p>
                 <ul className="space-y-2 text-sm text-blue-800">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 font-bold">✓</span>
@@ -198,6 +203,9 @@ function ApplicationReceivedContent() {
                     <span>Current HVAC info</span>
                   </li>
                 </ul>
+                <div className="mt-3 pt-3 border-t border-blue-200">
+                  <p className="text-xs text-blue-700 font-medium">📌 Upload now to start your 24-48 hour verification process</p>
+                </div>
               </div>
 
               {/* Contact Support */}

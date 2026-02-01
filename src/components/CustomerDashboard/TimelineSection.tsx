@@ -29,8 +29,15 @@ export function TimelineSection({ application, onNavigateToActions }: TimelineSe
         <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
           <p className="text-sm text-gray-600">Eligibility Score</p>
           <p className="text-lg font-bold text-emerald-600 mt-1">
-            {Math.round((application.eligibilityScore || 0) * 100)}%
+            {application.eligibilityScore && application.eligibilityScore > 0 ? (
+              `${Math.round(application.eligibilityScore * 100)}%`
+            ) : (
+              <span className="text-amber-600 text-base">Pending Review</span>
+            )}
           </p>
+          {(!application.eligibilityScore || application.eligibilityScore === 0) && (
+            <p className="text-xs text-gray-500 mt-1">Upload documents for assessment</p>
+          )}
         </div>
       </div>
     </div>

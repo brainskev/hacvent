@@ -14,9 +14,9 @@ const Benefits: React.FC = () => {
   const benefits: BenefitCard[] = [
     {
       title: 'Maximize Your Rebates',
-      description: 'We identify all available federal, state, and utility rebates you qualify for. Stack multiple incentives to save $5,000+.',
+      description: 'We identify all available federal, state, and utility rebates you qualify for. State-administered HEEHRA rebates alone offer $8,000–$14,000 for electric HVAC. Stack multiple incentives for maximum savings.',
       icon: <DollarSign className="w-12 h-12" />,
-      highlight: 'Save up to $5,000+'
+      highlight: 'Save up to $14,000+'
     },
     {
       title: 'Save Time & Energy',
