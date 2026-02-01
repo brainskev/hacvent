@@ -3,170 +3,285 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import AdminLayout from '@/components/AdminLayout'
-import { Filter, Mail, Search } from 'lucide-react'
+import { Filter, Mail, Search, RefreshCw } from 'lucide-react'
 
-type ContractorStatus =
-  | 'info-pending'
-  | 'docs-requested'
-  | 'docs-received'
-  | 'state-submission-in-progress'
-  | 'approved-payment-required'
-  | 'active-ready-for-matching'
-
-interface StatusEntry {
-  status: ContractorStatus
-  at: string
-  note?: string
+interface ContractorFromDB {
+  _id: string
+  company_name: string
+  contact_name: string
+  email: string
+  phone: string
+  license_number: string
+  service_areas: string[]
+  approved: boolean
+  approval_fee_paid: boolean
+  approval_fee_amount: number
+  total_projects_completed: number
+  status: 'pending' | 'details_requested' | 'awaiting_state_approval' | 'invoice_sent' | 'payment_pending' | 'approved' | 'suspended' | 'deactivated'
+  state_approved: boolean
+  onboarding_date: string
+  created_at: string
+  updated_at: string
 }
 
-interface DocumentItem {
-  id: string
-  name: string
-  status: 'requested' | 'received' | 'verified'
-  updatedAt: string
+const STATUS_LABELS: Record<string, string> = {
+  'pending': 'Pending Review',
+  'details_requested': 'Details Requested',
+  'awaiting_state_approval': 'Awaiting State Approval',
+  'invoice_sent': 'Invoice Sent',
+  'payment_pending': 'Payment Pending',
+  'approved': 'Approved - Active',
+  'suspended': 'Suspended',
+  'deactivated': 'Deactivated'
 }
 
-interface EmailLog {
-  id: string
-  subject: string
-  sentAt: string
+const STATUS_STYLES: Record<string, string> = {
+  'pending': 'bg-amber-50 text-amber-700 ring-amber-200',
+  'details_requested': 'bg-blue-50 text-blue-700 ring-blue-200',
+  'awaiting_state_approval': 'bg-purple-50 text-purple-700 ring-purple-200',
+  'invoice_sent': 'bg-indigo-50 text-indigo-700 ring-indigo-200',
+  'payment_pending': 'bg-yellow-50 text-yellow-700 ring-yellow-200',
+  'approved': 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  'suspended': 'bg-orange-50 text-orange-700 ring-orange-200',
+  'deactivated': 'bg-gray-100 text-gray-700 ring-gray-200'
 }
-
-interface ContractorRecord {
-  id: string
-  businessName: string
-  licenseNumber: string
-  status: ContractorStatus
-  docsReceived: boolean
-  paymentStatus: 'pending' | 'paid'
-  lastUpdated: string
-  documents: DocumentItem[]
-  statusHistory: StatusEntry[]
-  emails: EmailLog[]
-}
-
-const STATUS_LABELS: Record<ContractorStatus, string> = {
-  'info-pending': 'Info Pending',
-  'docs-requested': 'Docs Requested',
-  'docs-received': 'Docs Received',
-  'state-submission-in-progress': 'State Submission In Progress',
-  'approved-payment-required': 'Approved – Payment Required',
-  'active-ready-for-matching': 'Active – Ready for Matching'
-}
-
-const STATUS_STYLES: Record<ContractorStatus, string> = {
-  'info-pending': 'bg-gray-100 text-gray-700 ring-gray-200',
-  'docs-requested': 'bg-amber-50 text-amber-700 ring-amber-200',
-  'docs-received': 'bg-indigo-50 text-indigo-700 ring-indigo-200',
-  'state-submission-in-progress': 'bg-purple-50 text-purple-700 ring-purple-200',
-  'approved-payment-required': 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  'active-ready-for-matching': 'bg-sky-50 text-sky-700 ring-sky-200'
-}
-
-const initialContractors: ContractorRecord[] = [
-  {
-    id: 'CON-4001',
-    businessName: 'BrightSpark HVAC',
-    licenseNumber: 'LIC-8842',
-    status: 'docs-requested',
-    docsReceived: false,
-    paymentStatus: 'pending',
-    lastUpdated: '2026-01-21',
-    documents: [
-      { id: 'doc-1', name: 'License', status: 'requested', updatedAt: '2026-01-18' },
-      { id: 'doc-2', name: 'Insurance', status: 'requested', updatedAt: '2026-01-18' }
-    ],
-    statusHistory: [
-      { status: 'info-pending', at: '2026-01-15' },
-      { status: 'docs-requested', at: '2026-01-18', note: 'Requested license and insurance.' }
-    ],
-    emails: [{ id: 'email-1', subject: 'License & insurance request', sentAt: '2026-01-18' }]
-  },
-  {
-    id: 'CON-3993',
-    businessName: 'NorthPeak Heating',
-    licenseNumber: 'LIC-2305',
-    status: 'approved-payment-required',
-    docsReceived: true,
-    paymentStatus: 'pending',
-    lastUpdated: '2026-01-19',
-    documents: [
-      { id: 'doc-3', name: 'License', status: 'verified', updatedAt: '2026-01-10' },
-      { id: 'doc-4', name: 'Insurance', status: 'verified', updatedAt: '2026-01-10' }
-    ],
-    statusHistory: [
-      { status: 'docs-received', at: '2026-01-10' },
-      { status: 'approved-payment-required', at: '2026-01-19' }
-    ],
-    emails: [{ id: 'email-2', subject: 'Approval & invoice', sentAt: '2026-01-19' }]
-  }
-]
 
 export default function ContractorApplicationsPage() {
-  const [contractors, setContractors] = useState<ContractorRecord[]>(initialContractors)
+  const [contractors, setContractors] = useState<ContractorFromDB[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | ContractorStatus>('all')
-  const [selectedContractor, setSelectedContractor] = useState<ContractorRecord | null>(null)
-  const [statusDraft, setStatusDraft] = useState<ContractorStatus>('info-pending')
+  const [statusFilter, setStatusFilter] = useState<'all' | string>('all')
+  const [selectedContractor, setSelectedContractor] = useState<ContractorFromDB | null>(null)
 
   useEffect(() => {
-    if (selectedContractor) {
-      setStatusDraft(selectedContractor.status)
+    fetchContractors()
+  }, [])
+
+  const fetchContractors = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await fetch('/api/admin/contractors')
+      if (!response.ok) throw new Error('Failed to fetch contractors')
+      const data = await response.json()
+      setContractors(data.contractors || [])
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setLoading(false)
     }
-  }, [selectedContractor])
+  }
 
   const filteredContractors = useMemo(() => {
     return contractors.filter((contractor) => {
-      const matchesSearch =
-        contractor.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contractor.licenseNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contractor.id.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesSearch = contractor.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contractor.license_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contractor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contractor.contact_name.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesStatus = statusFilter === 'all' || contractor.status === statusFilter
       return matchesSearch && matchesStatus
     })
   }, [contractors, searchTerm, statusFilter])
 
-  const updateContractor = (id: string, updater: (current: ContractorRecord) => ContractorRecord) => {
-    setContractors((prev) => prev.map((contractor) => (contractor.id === id ? updater(contractor) : contractor)))
-    setSelectedContractor((current) => (current && current.id === id ? updater(current) : current))
+  const handleApprove = async (contractorId: string) => {
+    // TODO: Implement API call to update contractor status
+    alert('Approve functionality - API integration needed')
   }
 
-  const handleStatusUpdate = (id: string, status: ContractorStatus, note?: string) => {
-    updateContractor(id, (contractor) => ({
-      ...contractor,
-      status,
-      lastUpdated: new Date().toISOString().slice(0, 10),
-      statusHistory: [...contractor.statusHistory, { status, at: new Date().toISOString().slice(0, 10), note }]
-    }))
+  const handleSuspend = async (contractorId: string) => {
+    // TODO: Implement API call to suspend contractor
+    alert('Suspend functionality - API integration needed')
   }
 
-  const handleRequestDocs = (id: string) => {
-    updateContractor(id, (contractor) => ({
-      ...contractor,
-      status: 'docs-requested',
-      lastUpdated: new Date().toISOString().slice(0, 10),
-      docsReceived: false,
-      statusHistory: [...contractor.statusHistory, { status: 'docs-requested', at: new Date().toISOString().slice(0, 10), note: 'Requested license & insurance.' }],
-      emails: [...contractor.emails, { id: `email-${Date.now()}`, subject: 'License & insurance request', sentAt: new Date().toISOString().slice(0, 10) }]
-    }))
+  // ==================== Workflow Handler Functions ====================
+
+  const handleRequestDetails = async (contractorId: string) => {
+    try {
+      const response = await fetch(`/api/admin/contractors/${contractorId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'request_details',
+          status: 'details_requested'
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to request details')
+
+      const result = await response.json()
+      alert(`✅ Details request email sent to ${result.contractor.email}`)
+      setSelectedContractor(null)
+      fetchContractors()
+    } catch (err) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Failed to send email'}`)
+    }
   }
 
-  const handleDocsReceived = (id: string) => {
-    updateContractor(id, (contractor) => ({
-      ...contractor,
-      docsReceived: true,
-      documents: contractor.documents.map((doc) => ({ ...doc, status: 'received', updatedAt: new Date().toISOString().slice(0, 10) })),
-      status: 'docs-received',
-      lastUpdated: new Date().toISOString().slice(0, 10),
-      statusHistory: [...contractor.statusHistory, { status: 'docs-received', at: new Date().toISOString().slice(0, 10) }]
-    }))
+  const handleMarkStateApproved = async (contractorId: string) => {
+    const contractor = contractors.find((c) => c._id === contractorId)
+    if (!contractor) return
+
+    // If coming from pending status, this is the fast-track path (already state approved)
+    const isFastTrack = contractor.status === 'pending'
+
+    if (isFastTrack) {
+      const confirmed = confirm(
+        `Mark ${contractor.company_name} as already state-approved?\n\n` +
+          `This will:\n` +
+          `• Set state_approved = true\n` +
+          `• Skip fee requirement\n` +
+          `• Activate immediately\n` +
+          `• Send welcome email`
+      )
+      if (!confirmed) return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/contractors/${contractorId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: isFastTrack ? 'mark_state_approved_fast_track' : 'mark_state_approved',
+          state_approved: true,
+          status: isFastTrack ? 'approved' : 'invoice_sent',
+          approved: isFastTrack
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to mark as state approved')
+
+      const result = await response.json()
+      if (isFastTrack) {
+        alert(`✅ ${contractor.company_name} activated!\n\nWelcome email sent to ${result.contractor.email}`)
+      } else {
+        alert(`✅ State approval confirmed!\n\nInvoice email sent to ${result.contractor.email}`)
+      }
+      setSelectedContractor(null)
+      fetchContractors()
+    } catch (err) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Failed to update contractor'}`)
+    }
   }
 
-  const handleSendEmail = (id: string, subject: string) => {
-    updateContractor(id, (contractor) => ({
-      ...contractor,
-      emails: [...contractor.emails, { id: `email-${Date.now()}`, subject, sentAt: new Date().toISOString().slice(0, 10) }]
-    }))
+  const handleMarkSubmittedToState = async (contractorId: string) => {
+    const confirmed = confirm(
+      "Confirm that you have manually submitted this contractor's application to the state portal.\n\n" +
+        'Status will change to "Awaiting State Approval"'
+    )
+    if (!confirmed) return
+
+    try {
+      const response = await fetch(`/api/admin/contractors/${contractorId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'mark_submitted_to_state',
+          status: 'awaiting_state_approval'
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to update status')
+
+      alert('✅ Status updated to "Awaiting State Approval"')
+      setSelectedContractor(null)
+      fetchContractors()
+    } catch (err) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Failed to update status'}`)
+    }
+  }
+
+  const handleMarkPaymentReceived = async (contractorId: string) => {
+    const confirmed = confirm(
+      'Confirm that payment has been received.\n\n' +
+        'Status will change to "Payment Pending" (verification stage)'
+    )
+    if (!confirmed) return
+
+    try {
+      const response = await fetch(`/api/admin/contractors/${contractorId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'mark_payment_received',
+          status: 'payment_pending',
+          approval_fee_paid: true
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to mark payment')
+
+      alert('✅ Payment marked as received!\n\nVerify funds cleared before final activation.')
+      setSelectedContractor(null)
+      fetchContractors()
+    } catch (err) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Failed to update payment status'}`)
+    }
+  }
+
+  const handleFinalApproval = async (contractorId: string) => {
+    const contractor = contractors.find((c) => c._id === contractorId)
+    if (!contractor) return
+
+    const confirmed = confirm(
+      `Activate ${contractor.company_name}?\n\n` +
+        `This will:\n` +
+        `• Set status to "Approved - Active"\n` +
+        `• Enable customer matching\n` +
+        `• Send welcome email\n\n` +
+        `Make sure payment has cleared!`
+    )
+    if (!confirmed) return
+
+    try {
+      const response = await fetch(`/api/admin/contractors/${contractorId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'final_approval',
+          status: 'approved',
+          approved: true
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to activate contractor')
+
+      const result = await response.json()
+      alert(`🎉 ${contractor.company_name} is now active!\n\nWelcome email sent to ${result.contractor.email}`)
+      setSelectedContractor(null)
+      fetchContractors()
+    } catch (err) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Failed to activate contractor'}`)
+    }
+  }
+
+  const handleReactivate = async (contractorId: string) => {
+    const contractor = contractors.find((c) => c._id === contractorId)
+    if (!contractor) return
+
+    const confirmed = confirm(`Reactivate ${contractor.company_name}?`)
+    if (!confirmed) return
+
+    try {
+      const response = await fetch(`/api/admin/contractors/${contractorId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'reactivate',
+          status: 'approved',
+          approved: true
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to reactivate')
+
+      alert(`✅ ${contractor.company_name} reactivated!`)
+      setSelectedContractor(null)
+      fetchContractors()
+    } catch (err) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Failed to reactivate'}`)
+    }
   }
 
   return (
@@ -175,9 +290,11 @@ export default function ContractorApplicationsPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-              <p className="text-sm uppercase tracking-wide text-gray-500">Contractor onboarding</p>
-              <h1 className="text-2xl font-semibold text-gray-900">Contractor applications</h1>
-              <p className="text-sm text-gray-600">Track contractor documents, approvals, and payment status.</p>
+              <p className="text-sm uppercase tracking-wide text-gray-500">Contractor Management</p>
+              <h1 className="text-2xl font-semibold text-gray-900">All Contractors</h1>
+              <p className="text-sm text-gray-600">
+                {loading ? 'Loading...' : `${contractors.length} total contractors`}
+              </p>
             </div>
             <div className="flex flex-col md:flex-row md:items-center gap-3">
               <div className="relative w-full md:w-72">
@@ -185,7 +302,7 @@ export default function ContractorApplicationsPage() {
                 <input
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Search by business, license, or ID"
+                  placeholder="Search by company, license, or contact"
                   className="w-full rounded-lg border border-gray-200 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                 />
               </div>
@@ -193,7 +310,7 @@ export default function ContractorApplicationsPage() {
                 <Filter className="h-4 w-4 text-gray-500" />
                 <select
                   value={statusFilter}
-                  onChange={(event) => setStatusFilter(event.target.value as ContractorStatus | 'all')}
+                  onChange={(event) => setStatusFilter(event.target.value)}
                   className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                 >
                   <option value="all">All statuses</option>
@@ -204,59 +321,119 @@ export default function ContractorApplicationsPage() {
                   ))}
                 </select>
               </div>
+              <button
+                onClick={fetchContractors}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Refresh
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Business name</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">License number</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Docs received</th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Payment status</th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filteredContractors.map((contractor) => (
-                  <tr key={contractor.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-gray-900">{contractor.businessName}</div>
-                      <div className="text-xs text-gray-500">{contractor.id}</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{contractor.licenseNumber}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ${STATUS_STYLES[contractor.status]}`}>
-                        {STATUS_LABELS[contractor.status]}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ${contractor.docsReceived ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-amber-50 text-amber-700 ring-amber-200'}`}>
-                        {contractor.docsReceived ? 'Yes' : 'No'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-700 capitalize">{contractor.paymentStatus}</td>
-                    <td className="px-6 py-4 text-right text-sm font-semibold">
-                      <Link href={`/admin/contractors/${contractor.id}`} className="text-primary hover:text-primary-dark mr-3">
-                        View
-                      </Link>
-                      <button
-                        onClick={() => setSelectedContractor(contractor)}
-                        className="text-gray-700 hover:text-gray-900"
-                      >
-                        Manage
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* Error State */}
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+            <p className="text-red-800 font-semibold">Error loading contractors</p>
+            <p className="text-red-600 text-sm mt-1">{error}</p>
           </div>
-        </div>
+        )}
+
+        {/* Loading State */}
+        {loading && (
+          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+            <p className="mt-4 text-gray-600">Loading contractors...</p>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && contractors.length === 0 && (
+          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center shadow-sm">
+            <p className="text-gray-600 text-lg">No contractors found</p>
+            <p className="text-gray-500 text-sm mt-2">New contractor applications will appear here</p>
+          </div>
+        )}
+
+        {/* Contractors Table */}
+        {!loading && !error && contractors.length > 0 && (
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Company</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">License</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Contact</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Service Areas</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Projects</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Payment</th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {filteredContractors.map((contractor) => (
+                    <tr key={contractor._id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-semibold text-gray-900">{contractor.company_name}</div>
+                        <div className="text-xs text-gray-500">{contractor.contact_name}</div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{contractor.license_number}</td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-700">{contractor.email}</div>
+                        <div className="text-xs text-gray-500">{contractor.phone}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1">
+                          {contractor.service_areas.slice(0, 2).map((area, idx) => (
+                            <span key={idx} className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded">
+                              {area}
+                            </span>
+                          ))}
+                          {contractor.service_areas.length > 2 && (
+                            <span className="inline-block px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
+                              +{contractor.service_areas.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ${STATUS_STYLES[contractor.status]}`}>
+                          {STATUS_LABELS[contractor.status]}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700 text-center font-semibold">
+                        {contractor.total_projects_completed}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ${contractor.approval_fee_paid ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-amber-50 text-amber-700 ring-amber-200'}`}>
+                          {contractor.approval_fee_paid ? 'Paid' : 'Pending'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right text-sm font-semibold">
+                        <button
+                          onClick={() => setSelectedContractor(contractor)}
+                          className="text-primary hover:text-primary-dark"
+                        >
+                          Manage
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            {/* Results Info */}
+            <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
+                Showing {filteredContractors.length} of {contractors.length} contractors
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {selectedContractor && (
@@ -269,81 +446,212 @@ export default function ContractorApplicationsPage() {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="border-b border-gray-100 px-6 py-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Manage contractor</p>
-              <h3 className="text-lg font-semibold text-gray-900">{selectedContractor.businessName}</h3>
-              <p className="text-sm text-gray-600">License {selectedContractor.licenseNumber} · {selectedContractor.id}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Contractor Details</p>
+              <h3 className="text-lg font-semibold text-gray-900">{selectedContractor.company_name}</h3>
+              <p className="text-sm text-gray-600">
+                License: {selectedContractor.license_number}
+              </p>
             </div>
-            <div className="grid grid-cols-1 gap-4 px-6 py-4 md:grid-cols-2">
+            
+            <div className="px-6 py-4 space-y-4">
+              {/* Contact Information */}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Update status</p>
-                <select
-                  value={statusDraft}
-                  onChange={(event) => setStatusDraft(event.target.value as ContractorStatus)}
-                  className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                >
-                  {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Contact Information</p>
+                <div className="space-y-1 text-sm">
+                  <p><span className="font-medium">Contact:</span> {selectedContractor.contact_name}</p>
+                  <p><span className="font-medium">Email:</span> {selectedContractor.email}</p>
+                  <p><span className="font-medium">Phone:</span> {selectedContractor.phone}</p>
+                </div>
+              </div>
+
+              {/* Service Areas */}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Service Areas</p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedContractor.service_areas.map((area, idx) => (
+                    <span key={idx} className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded border border-blue-200">
+                      {area}
+                    </span>
                   ))}
-                </select>
-                <button
-                  onClick={() => handleStatusUpdate(selectedContractor.id, statusDraft)}
-                  className="mt-3 w-full rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-white hover:bg-primary/90"
-                >
-                  Save status
-                </button>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Documents</p>
-                <p className="mt-2 text-sm text-gray-600">License & insurance</p>
-                <button
-                  onClick={() => handleRequestDocs(selectedContractor.id)}
-                  className="mt-3 w-full rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-100"
-                >
-                  Request license & insurance
-                </button>
-                <button
-                  onClick={() => handleDocsReceived(selectedContractor.id)}
-                  className="mt-2 w-full rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
-                >
-                  Mark documents received
-                </button>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Status</p>
+                  <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ${STATUS_STYLES[selectedContractor.status]}`}>
+                    {STATUS_LABELS[selectedContractor.status]}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Projects Completed</p>
+                  <p className="text-2xl font-bold text-gray-900">{selectedContractor.total_projects_completed}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Approval Fee</p>
+                  <p className={`text-sm font-semibold ${selectedContractor.approval_fee_paid ? 'text-emerald-600' : 'text-amber-600'}`}>
+                    ${selectedContractor.approval_fee_amount} - {selectedContractor.approval_fee_paid ? 'Paid' : 'Pending'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Approved</p>
+                  <p className={`text-sm font-semibold ${selectedContractor.approved ? 'text-emerald-600' : 'text-gray-600'}`}>
+                    {selectedContractor.approved ? 'Yes' : 'No'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Emails</p>
-                <button
-                  onClick={() => handleSendEmail(selectedContractor.id, 'Approval email')}
-                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 ring-1 ring-blue-200 hover:bg-blue-100"
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                  Send approval email
-                </button>
-                <button
-                  onClick={() => handleSendEmail(selectedContractor.id, 'Invoice email')}
-                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                  Send invoice email
-                </button>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Payment</p>
-                <button
-                  onClick={() => updateContractor(selectedContractor.id, (contractor) => ({ ...contractor, paymentStatus: contractor.paymentStatus === 'paid' ? 'pending' : 'paid' }))}
-                  className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
-                >
-                  Mark payment {selectedContractor.paymentStatus === 'paid' ? 'pending' : 'received'}
-                </button>
+
+              {/* Actions */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">Quick Actions</p>
+                <div className="space-y-3">
+                  {/* Status-based workflow actions */}
+                  {selectedContractor.status === 'pending' && (
+                    <div className="space-y-2">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p className="text-xs font-medium text-blue-900 mb-2">Two Approval Paths Available:</p>
+                        <div className="space-y-2">
+                          <button
+                            onClick={() => handleRequestDetails(selectedContractor._id)}
+                            className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                          >
+                            📋 Request Submission Details
+                          </button>
+                          <p className="text-xs text-blue-700 px-2">→ Sends email for state approval documents</p>
+                          
+                          <div className="border-t border-blue-200 pt-2 mt-2">
+                            <button
+                              onClick={() => handleMarkStateApproved(selectedContractor._id)}
+                              className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                            >
+                              ✓ Mark as Already State-Approved
+                            </button>
+                            <p className="text-xs text-emerald-700 px-2 mt-1">→ Immediate activation, no fee</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedContractor.status === 'details_requested' && (
+                    <div className="space-y-2">
+                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <p className="text-xs font-medium text-amber-900 mb-2">⏳ Waiting for contractor documents</p>
+                        <p className="text-xs text-amber-700">Once received, submit to state portal manually.</p>
+                      </div>
+                      <button
+                        onClick={() => handleMarkSubmittedToState(selectedContractor._id)}
+                        className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                      >
+                        🚀 Mark as Submitted to State
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedContractor.status === 'awaiting_state_approval' && (
+                    <div className="space-y-2">
+                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                        <p className="text-xs font-medium text-purple-900 mb-2">⏱️ Pending state review</p>
+                        <p className="text-xs text-purple-700">Check state portal for approval status.</p>
+                      </div>
+                      <button
+                        onClick={() => window.open('https://michigan.gov/hvac-portal', '_blank')}
+                        className="w-full rounded-lg bg-purple-100 px-4 py-2 text-sm font-semibold text-purple-700 hover:bg-purple-200 border border-purple-300"
+                      >
+                        🔗 Check State Portal
+                      </button>
+                      <button
+                        onClick={() => handleMarkStateApproved(selectedContractor._id)}
+                        className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                      >
+                        ✓ Confirm State Approval Received
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedContractor.status === 'invoice_sent' && (
+                    <div className="space-y-2">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p className="text-xs font-medium text-blue-900 mb-2">💰 Invoice sent: ${selectedContractor.approval_fee_amount}</p>
+                        <p className="text-xs text-blue-700">Waiting for payment confirmation.</p>
+                      </div>
+                      <button
+                        onClick={() => handleMarkPaymentReceived(selectedContractor._id)}
+                        className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                      >
+                        ✓ Mark Payment Received
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedContractor.status === 'payment_pending' && (
+                    <div className="space-y-2">
+                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <p className="text-xs font-medium text-amber-900 mb-2">⏳ Payment processing</p>
+                        <p className="text-xs text-amber-700">Verify payment has cleared before activating.</p>
+                      </div>
+                      <button
+                        onClick={() => handleFinalApproval(selectedContractor._id)}
+                        className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                      >
+                        🎉 Activate Contractor Account
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedContractor.status === 'approved' && (
+                    <div className="space-y-2">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                        <p className="text-xs font-medium text-emerald-900 mb-2">✓ Active & receiving customer matches</p>
+                      </div>
+                      <button
+                        onClick={() => handleSuspend(selectedContractor._id)}
+                        className="w-full rounded-lg bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700"
+                      >
+                        ⏸️ Suspend Contractor
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedContractor.status === 'suspended' && (
+                    <div className="space-y-2">
+                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                        <p className="text-xs font-medium text-orange-900 mb-2">⏸️ Currently suspended</p>
+                        <p className="text-xs text-orange-700">Not receiving customer matches.</p>
+                      </div>
+                      <button
+                        onClick={() => handleReactivate(selectedContractor._id)}
+                        className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                      >
+                        ▶️ Reactivate Contractor
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Universal actions (always available) */}
+                  <div className="border-t border-gray-200 pt-3">
+                    <button
+                      onClick={() => window.open(`mailto:${selectedContractor.email}`, '_blank')}
+                      className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200 border border-gray-300"
+                    >
+                      <Mail className="h-4 w-4" />
+                      Send Custom Email
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
+
             <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4 text-xs text-gray-500">
-              <span>Last update: {selectedContractor.lastUpdated}</span>
+              <span>
+                Joined: {new Date(selectedContractor.onboarding_date).toLocaleDateString()}
+              </span>
               <button
                 onClick={() => setSelectedContractor(null)}
                 className="text-sm font-semibold text-gray-700 hover:text-gray-900"
               >
-                Done
+                Close
               </button>
             </div>
           </div>
