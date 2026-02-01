@@ -182,3 +182,32 @@ export interface IDocumentRequest {
   createdAt: Date
   completedAt?: Date
 }
+
+/**
+ * Contractor Document
+ */
+export interface IContractor {
+  _id?: ObjectId
+  company_name: string
+  contact_name: string
+  email: string
+  phone: string
+  license_number: string
+  service_areas: string[]
+  approved: boolean
+  approval_fee_paid: boolean
+  approval_fee_amount: number
+  approval_fee_paid_date?: Date
+  projects: string[] // Array of customer IDs
+  total_projects_completed: number
+  total_revenue_generated?: number
+  filing_fees_owed?: number
+  filing_fees_paid?: number
+  referral_fees_owed?: number
+  referral_fees_paid?: number
+  onboarding_date: Date
+  status: 'pending' | 'approved' | 'suspended' | 'deactivated'
+  notes?: string
+  created_at: Date
+  updated_at: Date
+}
