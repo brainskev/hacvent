@@ -16,7 +16,7 @@ const Testimonials: React.FC = () => {
     {
       name: 'Sarah Johnson',
       role: 'Homeowner, Michigan',
-      text: 'Hacvent made the rebate process so simple. I saved over $4,500 on my new HVAC system and everything was handled for me. Highly recommend!',
+      text: 'Hacvent made the rebate process so simple. The team handled everything for me and I was able to access rebates I didn\'t know about. Highly recommend!',
       rating: 5
     },
     {
@@ -28,7 +28,7 @@ const Testimonials: React.FC = () => {
     {
       name: 'Patricia Rodriguez',
       role: 'Homeowner, Wisconsin',
-      text: 'I was intimidated by the rebate application process, but Hacvent\'s team guided me every step. Got approved in just 8 weeks!',
+      text: 'I was intimidated by the rebate application process, but Hacvent\'s team guided me every step and made it easy to understand.',
       rating: 5
     },
     {
@@ -45,7 +45,7 @@ const Testimonials: React.FC = () => {
         {/* Section Header */}
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            Trusted by Thousands of Homeowners & Contractors
+            What Our Customers Say
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
             See what real customers say about their experience with Hacvent.

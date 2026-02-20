@@ -127,7 +127,7 @@ const FAQSection: React.FC = () => {
         <div className="mt-12 md:mt-16 text-center">
           <p className="text-gray-700 mb-4">Can't find what you're looking for?</p>
           <a
-            href="/contact"
+            href="/support"
             className="inline-block bg-primary text-white font-semibold py-3 px-8 rounded-lg hover:bg-primary-dark transition-colors duration-300"
           >
             Contact Our Support Team

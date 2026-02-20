@@ -9,7 +9,7 @@ const CTASection: React.FC = () => {
         {/* Main CTA */}
         <div className="text-center text-white mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            Start Saving on Your HVAC System Today
+            Simplify Your HVAC Rebate Process
           </h2>
           <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto mb-8">
             No hidden fees. No obligations. Just honest guidance to maximize your rebate potential.

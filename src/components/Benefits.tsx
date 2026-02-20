@@ -14,9 +14,9 @@ const Benefits: React.FC = () => {
   const benefits: BenefitCard[] = [
     {
       title: 'Maximize Your Rebates',
-      description: 'We identify all available federal, state, and utility rebates you qualify for. State-administered HEEHRA rebates alone offer $8,000–$14,000 for electric HVAC. Stack multiple incentives for maximum savings.',
+      description: 'We help identify available federal, state, and utility rebates. Some programs offer substantial incentives; amounts vary by location and eligibility.',
       icon: <DollarSign className="w-12 h-12" />,
-      highlight: 'Save up to $14,000+'
+      highlight: 'Identify all available rebates'
     },
     {
       title: 'Save Time & Energy',
@@ -31,10 +31,10 @@ const Benefits: React.FC = () => {
       highlight: 'Expert support included'
     },
     {
-      title: 'Guaranteed Results',
-      description: 'Our verification process ensures accurate submissions, reducing denial rates and getting you paid faster.',
+      title: 'Verified Submissions',
+      description: 'Our process helps ensure accurate submissions, which may reduce common errors and support faster processing.',
       icon: <TrendingUp className="w-12 h-12" />,
-      highlight: '99% approval rate'
+      highlight: 'Careful documentation'
     }
   ]
 
@@ -89,20 +89,20 @@ const Benefits: React.FC = () => {
         {/* Trust Stats */}
         <div className="mt-16 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-t border-b border-gray-200">
           <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">10K+</div>
-            <p className="text-gray-600">Happy Customers</p>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">$50M+</div>
-            <p className="text-gray-600">Rebates Claimed</p>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">99%</div>
-            <p className="text-gray-600">Approval Rate</p>
-          </div>
-          <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-primary mb-2">50+</div>
             <p className="text-gray-600">State Programs</p>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl md:text-4xl font-bold text-primary mb-2">5K+</div>
+            <p className="text-gray-600">Utility Sources</p>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl md:text-3xl font-bold text-primary mb-2">30%</div>
+            <p className="text-gray-600">Federal Credit</p>
+          </div>
+          <div className="text-center">
+            <div className="text-sm md:text-base font-semibold text-primary mb-2">Easy Access</div>
+            <p className="text-gray-600">All in One Place</p>
           </div>
         </div>
       </div>

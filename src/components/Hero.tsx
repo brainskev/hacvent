@@ -19,7 +19,7 @@ const Hero: React.FC = () => {
           {/* Left Content */}
           <div className="text-white animate-fade-in">
             <div className="inline-block bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 mb-4">
-              <p className="text-sm font-semibold">💰 Up to $8,000–$14,000 in HEEHRA Rebates Available</p>
+              <p className="text-sm font-semibold">💰 Rebate amounts vary by location and program eligibility</p>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               Get Approved for Energy-Efficient HVAC Rebates Easily

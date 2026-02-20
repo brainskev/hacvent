@@ -48,6 +48,9 @@ const Header: React.FC = () => {
             <Link href="/faq" className="text-gray-700 hover:text-primary font-medium transition-colors">
               FAQ
             </Link>
+            <Link href="/support" className="text-gray-700 hover:text-primary font-medium transition-colors">
+              Support
+            </Link>
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
               {isSignedIn ? (
                 <>
@@ -132,6 +135,13 @@ const Header: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 FAQ
+              </Link>
+              <Link 
+                href="/support" 
+                className="text-gray-700 hover:text-primary font-medium transition-colors py-2 touch-manipulation"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Support
               </Link>
               <div className="pt-3 border-t border-gray-200 flex flex-col gap-2">
                 {isSignedIn ? (
