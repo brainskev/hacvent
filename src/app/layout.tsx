@@ -53,7 +53,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          badge: 'hidden',
+        },
+      }}
+    >
       <html lang="en">
         <head>
           <link rel="icon" href="/favicon.ico" />

@@ -29,7 +29,7 @@ const faqDatabase: FAQItem[] = [
     id: 3,
     category: 'General',
     question: 'How much can I save with HVAC rebates?',
-    answer: 'Savings vary significantly based on your location, system type, and efficiency rating. On average, homeowners can save between $1,000 and $8,000 when combining multiple rebates. Federal tax credits alone can provide up to 30% back on qualifying systems. High-efficiency heat pumps often qualify for the highest rebates, sometimes exceeding $10,000 when stacking federal, state, and utility incentives.'
+    answer: 'Savings vary significantly based on your location, system type, and efficiency rating. Your specific savings depend on available programs in your area and your eligibility. Federal tax credits can provide substantial relief, while rebate amounts depend on local programs. Contact us for a personalized estimate.'
   },
   // Eligibility
   {

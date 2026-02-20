@@ -14,14 +14,14 @@ const Footer: React.FC = () => {
     'image': '/hacvent-logo.svg',
     'description': 'HVAC rebate assistance and certified contractor matching service. By Marxma LLC.',
     'url': 'https://hacvent.com',
-    'telephone': '+1-800-555-1234',
+    'telephone': '+1-719-530-4900',
     'email': 'support@hacvent.com',
     'address': {
       '@type': 'PostalAddress',
-      'streetAddress': '123 Energy Way',
-      'addressLocality': 'San Francisco',
-      'addressRegion': 'CA',
-      'postalCode': '94105',
+      'streetAddress': '2055 Limestone Rd STE 200-C',
+      'addressLocality': 'Wilmington',
+      'addressRegion': 'DE',
+      'postalCode': '19808',
       'addressCountry': 'US'
     },
     'sameAs': [
@@ -131,13 +131,13 @@ const Footer: React.FC = () => {
               <li className="flex items-start space-x-2">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  123 Energy Way<br />San Francisco, CA 94105<br />United States
+                  2055 Limestone Rd STE 200-C<br />Wilmington, DE 19808<br />United States
                 </span>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="tel:+18005551234" className="text-gray-400 hover:text-primary transition-colors text-sm">
-                  1-800-555-1234
+                <a href="tel:+17195304900" className="text-gray-400 hover:text-primary transition-colors text-sm">
+                  +1 (719) 530-4900
                 </a>
               </li>
               <li className="flex items-center space-x-2">
@@ -169,7 +169,7 @@ const Footer: React.FC = () => {
           
           <div className="text-center pt-6 border-t border-gray-800">
             <p className="text-gray-400 text-sm">
-              &copy; {currentYear} Hacvent. All rights reserved. Owned by Marxma LLC. | Empowering energy efficiency nationwide.
+              &copy; {currentYear} Hacvent by Marxma LLC. All rights reserved.
             </p>
           </div>
         </div>
