@@ -3,6 +3,9 @@ import { getCollection } from '@/lib/mongodb'
 import { IApplication } from '@/lib/types'
 import { isAdminRequest } from '@/lib/adminAuth'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/admin/applications
  * Fetch all applications for admin view

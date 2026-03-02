@@ -5,6 +5,9 @@ import { INotification, IApplication } from '@/lib/types'
 import { ObjectId } from 'mongodb'
 import { isAdminRequest } from '@/lib/adminAuth'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 /**
  * PATCH /api/admin/documents/[id]/verify
  * Verify or reject a document

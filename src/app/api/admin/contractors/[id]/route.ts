@@ -8,6 +8,9 @@ import {
 } from '@/lib/emailTemplates'
 import { isAdminRequest } from '@/lib/adminAuth'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 /**
  * PATCH /api/admin/contractors/[id]
  * Update contractor status and send workflow emails

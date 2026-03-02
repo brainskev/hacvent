@@ -4,6 +4,9 @@ import { ObjectId } from 'mongodb'
 import { INotification, IDocumentRequest, DocumentType } from '@/lib/types'
 import { isAdminRequest } from '@/lib/adminAuth'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/admin/applications/[id]/request-documents
  * Request documents from customer

@@ -4,6 +4,9 @@ import { ObjectId } from 'mongodb'
 import { IDocument, DocumentStatus, DocumentType, IStatusChange, INotification, ApplicationStatus } from '@/lib/types'
 import { isAdminRequest } from '@/lib/adminAuth'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/admin/applications/[id]/documents
  * Upload a document for an application
