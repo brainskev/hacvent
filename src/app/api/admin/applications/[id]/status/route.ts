@@ -5,6 +5,9 @@ import { IApplication, ApplicationStatus, IStatusChange, INotification } from '@
 import { isValidTransition, statusLabels } from '@/lib/statusMachine'
 import { isAdminRequest } from '@/lib/adminAuth'
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
+
 /**
  * PATCH /api/admin/applications/[id]/status
  * Change application status
