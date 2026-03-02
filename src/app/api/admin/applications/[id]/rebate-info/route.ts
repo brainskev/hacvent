@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ObjectId } from 'mongodb'
 import { getCollection } from '@/lib/mongodb'
 import { IApplication } from '@/lib/types'
+import { isAdminRequest } from '@/lib/adminAuth'
 
 /**
  * PATCH /api/admin/applications/[id]/rebate-info
@@ -9,6 +10,11 @@ import { IApplication } from '@/lib/types'
  */
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const { rebatePortalEmail, rebatePortalPassword } = await request.json()
 
     if (!ObjectId.isValid(params.id)) {

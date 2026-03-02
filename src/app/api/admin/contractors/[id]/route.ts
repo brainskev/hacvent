@@ -6,6 +6,7 @@ import {
   getInvoiceEmailTemplate,
   getApprovalConfirmationEmailTemplate
 } from '@/lib/emailTemplates'
+import { isAdminRequest } from '@/lib/adminAuth'
 
 /**
  * PATCH /api/admin/contractors/[id]
@@ -16,6 +17,11 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const contractorId = params.id
     const body = await request.json()
     const { action, ...updates } = body
@@ -180,6 +186,11 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const contractorId = params.id
 
     const db = await getDb()

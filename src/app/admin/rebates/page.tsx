@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import AdminLayout from '@/components/AdminLayout'
+import { useAuth } from '@clerk/nextjs'
 import { FileCheck2, FileUp, Flag, HelpCircle } from 'lucide-react'
 
 interface RebateProject {
@@ -32,7 +33,22 @@ const STATUS_STYLES: Record<RebateProject['status'], string> = {
   paid: 'bg-emerald-50 text-emerald-700 ring-emerald-200'
 }
 
-export default function RebatesPage() {
+function RebatesPageContent() {
+  const { isLoaded } = useAuth()
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+          </div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   const [projects, setProjects] = useState<RebateProject[]>(initialProjects)
 
   const updateProject = (id: string, updater: (current: RebateProject) => RebateProject) => {
@@ -144,4 +160,8 @@ export default function RebatesPage() {
       </div>
     </AdminLayout>
   )
+}
+
+export default function RebatesPage() {
+  return <RebatesPageContent />
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCollection } from '@/lib/mongodb'
 import { IApplication } from '@/lib/types'
+import { isAdminRequest } from '@/lib/adminAuth'
 
 /**
  * GET /api/admin/applications
@@ -11,11 +12,10 @@ import { IApplication } from '@/lib/types'
 
 export async function GET(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check here
-    // const isAdmin = await checkAdminAuth(request)
-    // if (!isAdmin) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    // }
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
 
     const applicationsCollection = await getCollection<IApplication>('applications')
 

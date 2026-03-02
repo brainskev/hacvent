@@ -78,11 +78,11 @@ const CTASection: React.FC = () => {
             </span>
             <span className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5" />
-              Free to get started
+              Free eligibility check
             </span>
             <span className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5" />
-              Trusted by 10,000+ homeowners
+              Licensed contractors
             </span>
           </p>
         </div>

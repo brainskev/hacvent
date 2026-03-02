@@ -154,16 +154,16 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-800 mt-8 md:mt-12 pt-8 md:pt-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div>
-              <p className="text-gray-400 text-xs font-semibold mb-2 text-white/70">VERIFIED & CERTIFIED</p>
-              <p className="text-gray-400 text-sm">Energy Star Certified • Licensed Contractors • Accredited Programs</p>
+              <p className="text-gray-400 text-xs font-semibold mb-2 text-white/70">SERVICES</p>
+              <p className="text-gray-400 text-sm">Rebate Assistance • Licensed Contractors • Program Navigation</p>
             </div>
             <div>
               <p className="text-gray-400 text-xs font-semibold mb-2 text-white/70">COVERAGE</p>
-              <p className="text-gray-400 text-sm">50+ State Programs • 5,000+ Utility Rebates • Federal Tax Credits</p>
+              <p className="text-gray-400 text-sm">State Programs • Utility Incentives • Federal Tax Credits</p>
             </div>
             <div>
-              <p className="text-gray-400 text-xs font-semibold mb-2 text-white/70">TRUSTED BY</p>
-              <p className="text-gray-400 text-sm">10,000+ Homeowners • $50M+ Rebates Claimed • 99% Approval Rate</p>
+              <p className="text-gray-400 text-xs font-semibold mb-2 text-white/70">CONTACT</p>
+              <p className="text-gray-400 text-sm">support@hacvent.com • (719) 530-4900</p>
             </div>
           </div>
           

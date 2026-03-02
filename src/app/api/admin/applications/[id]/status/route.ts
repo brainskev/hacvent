@@ -3,6 +3,7 @@ import { getCollection } from '@/lib/mongodb'
 import { ObjectId } from 'mongodb'
 import { IApplication, ApplicationStatus, IStatusChange, INotification } from '@/lib/types'
 import { isValidTransition, statusLabels } from '@/lib/statusMachine'
+import { isAdminRequest } from '@/lib/adminAuth'
 
 /**
  * PATCH /api/admin/applications/[id]/status
@@ -10,6 +11,11 @@ import { isValidTransition, statusLabels } from '@/lib/statusMachine'
  */
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const { newStatus, reason, adminId, override } = await request.json()
     const applicationId = new ObjectId(params.id)
 
@@ -110,6 +116,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  */
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const applicationId = new ObjectId(params.id)
     const statusChangesCollection = await getCollection<IStatusChange>('statusChanges')
 

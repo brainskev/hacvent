@@ -3,6 +3,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useClerk, useUser } from '@clerk/nextjs'
 import { 
   LayoutDashboard, 
   Users, 
@@ -22,6 +23,8 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children, title = 'Admin Dashboard' }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
+  const { signOut } = useClerk()
+  const { user } = useUser()
 
   const navigation = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
@@ -31,6 +34,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
     { name: 'Payments', href: '/admin/payments', icon: DollarSign },
     { name: 'Reports', href: '/admin/reports', icon: BarChart3 },
   ]
+
+  const handleLogout = async () => {
+    await signOut({ redirectUrl: '/sign-in' })
+  }
 
   return (
     <>
@@ -84,7 +91,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           </nav>
 
           <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
-            <button className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-colors w-full">
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-colors w-full"
+            >
               <LogOut className="w-5 h-5" />
               <span>Logout</span>
             </button>
@@ -104,7 +114,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
               </button>
               <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600">admin@hacvent.com</span>
+                <span className="text-sm text-gray-600">{user?.primaryEmailAddress?.emailAddress || 'Admin'}</span>
               </div>
             </div>
           </header>
