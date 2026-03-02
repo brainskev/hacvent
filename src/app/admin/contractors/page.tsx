@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import AdminLayout from '@/components/AdminLayout'
+import { useAuth } from '@clerk/nextjs'
 import { Filter, Mail, Search, RefreshCw } from 'lucide-react'
 
 interface ContractorFromDB {
@@ -46,7 +47,31 @@ const STATUS_STYLES: Record<string, string> = {
   'deactivated': 'bg-gray-100 text-gray-700 ring-gray-200'
 }
 
-export default function ContractorApplicationsPage() {
+function ContractorApplicationsPageContent() {
+  const { isLoaded } = useAuth()
+
+  const handleUnauthorized = (response: Response) => {
+    if (response.status === 401 || response.status === 403) {
+      if (typeof window !== 'undefined') {
+        window.location.href = '/customer-dashboard'
+      }
+      throw new Error('Unauthorized')
+    }
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+          </div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   const [contractors, setContractors] = useState<ContractorFromDB[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -63,6 +88,7 @@ export default function ContractorApplicationsPage() {
       setLoading(true)
       setError(null)
       const response = await fetch('/api/admin/contractors')
+      handleUnauthorized(response)
       if (!response.ok) throw new Error('Failed to fetch contractors')
       const data = await response.json()
       setContractors(data.contractors || [])
@@ -108,6 +134,7 @@ export default function ContractorApplicationsPage() {
         })
       })
 
+      handleUnauthorized(response)
       if (!response.ok) throw new Error('Failed to request details')
 
       const result = await response.json()
@@ -150,6 +177,7 @@ export default function ContractorApplicationsPage() {
         })
       })
 
+      handleUnauthorized(response)
       if (!response.ok) throw new Error('Failed to mark as state approved')
 
       const result = await response.json()
@@ -182,6 +210,7 @@ export default function ContractorApplicationsPage() {
         })
       })
 
+      handleUnauthorized(response)
       if (!response.ok) throw new Error('Failed to update status')
 
       alert('✅ Status updated to "Awaiting State Approval"')
@@ -210,6 +239,7 @@ export default function ContractorApplicationsPage() {
         })
       })
 
+      handleUnauthorized(response)
       if (!response.ok) throw new Error('Failed to mark payment')
 
       alert('✅ Payment marked as received!\n\nVerify funds cleared before final activation.')
@@ -245,6 +275,7 @@ export default function ContractorApplicationsPage() {
         })
       })
 
+      handleUnauthorized(response)
       if (!response.ok) throw new Error('Failed to activate contractor')
 
       const result = await response.json()
@@ -274,6 +305,7 @@ export default function ContractorApplicationsPage() {
         })
       })
 
+      handleUnauthorized(response)
       if (!response.ok) throw new Error('Failed to reactivate')
 
       alert(`✅ ${contractor.company_name} reactivated!`)
@@ -659,4 +691,8 @@ export default function ContractorApplicationsPage() {
       )}
     </AdminLayout>
   )
+}
+
+export default function ContractorApplicationsPage() {
+  return <ContractorApplicationsPageContent />
 }

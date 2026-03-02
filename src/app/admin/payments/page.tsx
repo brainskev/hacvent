@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import AdminLayout from '@/components/AdminLayout'
+import { useAuth } from '@clerk/nextjs'
 import { DollarSign, Mail, StickyNote } from 'lucide-react'
 
 interface InvoiceItem {
@@ -18,7 +19,22 @@ const initialInvoices: InvoiceItem[] = [
   { id: 'INV-2197', contractor: 'NorthPeak Heating', amount: 250, status: 'paid', updatedAt: '2026-01-18', note: 'Paid via ACH' }
 ]
 
-export default function PaymentsPage() {
+function PaymentsPageContent() {
+  const { isLoaded } = useAuth()
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+          </div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   const [invoices, setInvoices] = useState<InvoiceItem[]>(initialInvoices)
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceItem | null>(null)
   const [noteDraft, setNoteDraft] = useState('')
@@ -192,4 +208,8 @@ export default function PaymentsPage() {
       )}
     </AdminLayout>
   )
+}
+
+export default function PaymentsPage() {
+  return <PaymentsPageContent />
 }

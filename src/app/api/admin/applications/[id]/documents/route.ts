@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getCollection } from '@/lib/mongodb'
 import { ObjectId } from 'mongodb'
 import { IDocument, DocumentStatus, DocumentType, IStatusChange, INotification, ApplicationStatus } from '@/lib/types'
+import { isAdminRequest } from '@/lib/adminAuth'
 
 /**
  * POST /api/admin/applications/[id]/documents
@@ -9,6 +10,11 @@ import { IDocument, DocumentStatus, DocumentType, IStatusChange, INotification, 
  */
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const applicationId = new ObjectId(params.id)
 
     // Parse form data
@@ -80,6 +86,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
  */
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const applicationId = new ObjectId(params.id)
     const documentsCollection = await getCollection<IDocument>('documents')
 

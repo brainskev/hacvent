@@ -3,6 +3,7 @@ import { updateDocumentStatus } from '@/lib/documentService'
 import { getCollection } from '@/lib/mongodb'
 import { INotification, IApplication } from '@/lib/types'
 import { ObjectId } from 'mongodb'
+import { isAdminRequest } from '@/lib/adminAuth'
 
 /**
  * PATCH /api/admin/documents/[id]/verify
@@ -19,6 +20,11 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const { action, status, verifiedBy, rejectionReason } = await request.json()
     const documentId = params.id
 

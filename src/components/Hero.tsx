@@ -85,12 +85,13 @@ const Hero: React.FC = () => {
               {/* Stats Cards */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/30 hover:bg-white/30 transition-colors duration-300">
-                  <div className="text-2xl sm:text-3xl font-bold text-white">$8K–$14K</div>
-                  <div className="text-xs sm:text-sm text-white/80">HEEHRA Rebates</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-white">Up to $14K</div>
+                  <div className="text-xs sm:text-sm text-white/80">HEEHRA Rebates*</div>
+                  <div className="text-xs text-white/60 mt-1">*Varies by location</div>
                 </div>
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/30 hover:bg-white/30 transition-colors duration-300">
-                  <div className="text-2xl sm:text-3xl font-bold text-white">10K+</div>
-                  <div className="text-xs sm:text-sm text-white/80">Happy Customers</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-white">50+</div>
+                  <div className="text-xs sm:text-sm text-white/80">State Programs</div>
                 </div>
               </div>
             </div>

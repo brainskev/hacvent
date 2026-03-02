@@ -12,32 +12,8 @@ interface Testimonial {
 }
 
 const Testimonials: React.FC = () => {
-  const testimonials: Testimonial[] = [
-    {
-      name: 'Sarah Johnson',
-      role: 'Homeowner, Michigan',
-      text: 'Hacvent made the rebate process so simple. The team handled everything for me and I was able to access rebates I didn\'t know about. Highly recommend!',
-      rating: 5
-    },
-    {
-      name: 'Michael Chen',
-      role: 'HVAC Contractor, Ohio',
-      text: 'As a contractor, I love how Hacvent streamlines rebate documentation. My customers are happier and we close deals faster. Best partnership we\'ve made.',
-      rating: 5
-    },
-    {
-      name: 'Patricia Rodriguez',
-      role: 'Homeowner, Wisconsin',
-      text: 'I was intimidated by the rebate application process, but Hacvent\'s team guided me every step and made it easy to understand.',
-      rating: 5
-    },
-    {
-      name: 'James Park',
-      role: 'Energy Auditor, Illinois',
-      text: 'Hacvent connects homeowners with the best rebate opportunities. Their platform is intuitive and their support team is fantastic.',
-      rating: 5
-    }
-  ]
+  // Testimonials will be added after collecting verified customer reviews
+  const testimonials: Testimonial[] = []
 
   return (
     <section className="py-16 md:py-24 bg-gray-50">
@@ -45,15 +21,15 @@ const Testimonials: React.FC = () => {
         {/* Section Header */}
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            What Our Customers Say
+            Partner Programs & Services
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            See what real customers say about their experience with Hacvent.
+            We connect homeowners with rebate programs across the United States.
           </p>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        {/* Testimonials Grid - Hidden until we have verified reviews */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8" style={{ display: 'none' }}>
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
@@ -103,25 +79,25 @@ const Testimonials: React.FC = () => {
             <div className="flex items-center justify-center py-4">
               <div className="font-semibold text-gray-600 text-center">
                 <div className="text-sm font-bold">Energy Star</div>
-                <div className="text-xs text-gray-500">Certified</div>
+                <div className="text-xs text-gray-500">Eligible Products</div>
               </div>
             </div>
             <div className="flex items-center justify-center py-4">
               <div className="font-semibold text-gray-600 text-center">
-                <div className="text-sm font-bold">Federal Tax Credits</div>
-                <div className="text-xs text-gray-500">Approved</div>
+                <div className="text-sm font-bold">Federal Programs</div>
+                <div className="text-xs text-gray-500">Available</div>
               </div>
             </div>
             <div className="flex items-center justify-center py-4">
               <div className="font-semibold text-gray-600 text-center">
                 <div className="text-sm font-bold">State Programs</div>
-                <div className="text-xs text-gray-500">50+ States</div>
+                <div className="text-xs text-gray-500">Nationwide</div>
               </div>
             </div>
             <div className="flex items-center justify-center py-4">
               <div className="font-semibold text-gray-600 text-center">
                 <div className="text-sm font-bold">Utility Rebates</div>
-                <div className="text-xs text-gray-500">5000+ Programs</div>
+                <div className="text-xs text-gray-500">Multiple Programs</div>
               </div>
             </div>
           </div>

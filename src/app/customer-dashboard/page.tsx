@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import Layout from '@/components/Layout'
@@ -20,6 +20,7 @@ function CustomerDashboardContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [activeSection, setActiveSection] = useState<DashboardSection>('timeline')
+  const documentsSectionRef = useRef<HTMLDivElement>(null)
   const [documents, setDocuments] = useState<IDocument[]>([])
   const [isActionRequired, setIsActionRequired] = useState(true)
   const [applications, setApplications] = useState<IApplication[]>([])
@@ -86,6 +87,16 @@ function CustomerDashboardContent() {
       setActiveSection(section)
     }
   }, [searchParams])
+
+  // Auto-scroll to documents section when section changes to 'documents'
+  useEffect(() => {
+    if (activeSection === 'documents' && documentsSectionRef.current) {
+      // Use a small delay to ensure the DOM has updated
+      setTimeout(() => {
+        documentsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
+    }
+  }, [activeSection])
 
   useEffect(() => {
     if (!isLoaded || !user || !selectedApplicationId) return
@@ -188,13 +199,15 @@ function CustomerDashboardContent() {
         )}
 
         {activeSection === 'documents' && selectedApplication && (
-          <DocumentsSection
-            applicationStatus={selectedApplication.status}
-            isActionRequired={isActionRequired}
-            documents={documents}
-            onUpload={handleFileUpload}
-            onDocumentsRefresh={handleDocumentsRefresh}
-          />
+          <div ref={documentsSectionRef}>
+            <DocumentsSection
+              applicationStatus={selectedApplication.status}
+              isActionRequired={isActionRequired}
+              documents={documents}
+              onUpload={handleFileUpload}
+              onDocumentsRefresh={handleDocumentsRefresh}
+            />
+          </div>
         )}
 
         {activeSection === 'notifications' && (

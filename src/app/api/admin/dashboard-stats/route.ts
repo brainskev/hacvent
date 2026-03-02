@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCollection } from '@/lib/mongodb'
+import { isAdminRequest } from '@/lib/adminAuth'
 
 export async function GET(request: NextRequest) {
   try {
+    const isAdmin = await isAdminRequest()
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+
     const customers = await getCollection('customers')
     const contractors = await getCollection('contractors')
     const projects = await getCollection('projects')

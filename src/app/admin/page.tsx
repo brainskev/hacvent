@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import { useAuth } from '@clerk/nextjs'
 import AdminLayout from '@/components/AdminLayout'
 import { FileText, Link2, Users, Wrench, DollarSign, ClipboardCheck, Sparkles } from 'lucide-react'
 
@@ -22,7 +23,22 @@ const quickLinks = [
   { label: 'Payments & invoicing', href: '/admin/payments', icon: DollarSign }
 ]
 
-export default function AdminOverviewPage() {
+function AdminOverviewContent() {
+  const { isLoaded } = useAuth()
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
+          </div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <AdminLayout title="Admin Overview">
       <div className="space-y-6">
@@ -70,4 +86,8 @@ export default function AdminOverviewPage() {
       </div>
     </AdminLayout>
   )
+}
+
+export default function AdminOverviewPage() {
+  return <AdminOverviewContent />
 }
