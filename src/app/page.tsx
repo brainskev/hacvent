@@ -25,7 +25,7 @@ const organizationSchema = {
   'contactPoint': {
     '@type': 'ContactPoint',
     'contactType': 'Customer Support',
-    'telephone': '+1-719-530-4900',
+    'telephone': '+1-906-210-3796',
     'email': 'support@hacvent.com'
   },
   'areaServed': 'US',

@@ -64,7 +64,7 @@ export default function PrivacyPage() {
                 2055 Limestone Rd STE 200-C<br />
                 Wilmington, DE 19808<br />
                 support@hacvent.com<br />
-                +1 (719) 530-4900
+                +1 (906) 210-3796
               </p>
             </div>
           </div>

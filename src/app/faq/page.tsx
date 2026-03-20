@@ -285,8 +285,8 @@ export default function FAQ() {
               <a href="mailto:support@hacvent.com" className="btn-primary">
                 Email Support
               </a>
-              <a href="tel:+18005551234" className="btn-outline">
-                Call Us: 1-800-555-1234
+              <a href="tel:+19062103796" className="btn-outline">
+                Call Us: +1 (906) 210-3796
               </a>
             </div>
           </div>

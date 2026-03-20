@@ -16,7 +16,7 @@ export default function ContactPage() {
               <h2 className="text-xl font-semibold text-gray-900 mb-2">General Contact</h2>
               <p>
                 Email: <a className="text-primary hover:underline" href="mailto:support@hacvent.com">support@hacvent.com</a><br />
-                Phone: <a className="text-primary hover:underline" href="tel:+17195304900">+1 (719) 530-4900</a>
+                Phone: <a className="text-primary hover:underline" href="tel:+19062103796">+1 (906) 210-3796</a>
               </p>
             </div>
 

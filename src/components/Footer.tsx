@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
     'image': '/hacvent-logo.svg',
     'description': 'HVAC rebate assistance and certified contractor matching service. By Marxma LLC.',
     'url': 'https://hacvent.com',
-    'telephone': '+1-719-530-4900',
+    'telephone': '+1-906-210-3796',
     'email': 'support@hacvent.com',
     'address': {
       '@type': 'PostalAddress',
@@ -136,8 +136,8 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <a href="tel:+17195304900" className="text-gray-400 hover:text-primary transition-colors text-sm">
-                  +1 (719) 530-4900
+                <a href="tel:+19062103796" className="text-gray-400 hover:text-primary transition-colors text-sm">
+                  +1 (906) 210-3796
                 </a>
               </li>
               <li className="flex items-center space-x-2">
@@ -163,7 +163,7 @@ const Footer: React.FC = () => {
             </div>
             <div>
               <p className="text-gray-400 text-xs font-semibold mb-2 text-white/70">CONTACT</p>
-              <p className="text-gray-400 text-sm">support@hacvent.com • (719) 530-4900</p>
+              <p className="text-gray-400 text-sm">support@hacvent.com • (906) 210-3796</p>
             </div>
           </div>
           
