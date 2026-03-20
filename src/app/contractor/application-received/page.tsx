@@ -162,7 +162,7 @@ function ContractorApplicationReceivedContent() {
               <a href="mailto:contractors@hacvent.com" className="btn-secondary py-2 px-4 text-sm">
                 Email Contractor Support
               </a>
-              <a href="tel:+1234567890" className="btn-secondary py-2 px-4 text-sm">
+              <a href="tel:+19062103796" className="btn-secondary py-2 px-4 text-sm">
                 Call Us
               </a>
             </div>

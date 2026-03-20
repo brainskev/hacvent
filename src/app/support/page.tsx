@@ -17,7 +17,7 @@ export default function SupportPage() {
               <h2 className="text-xl font-semibold text-gray-900 mb-2">Contact Support</h2>
               <p>
                 Email: <a className="text-primary hover:underline" href="mailto:support@hacvent.com">support@hacvent.com</a><br />
-                Phone: <a className="text-primary hover:underline" href="tel:+17195304900">+1 (719) 530-4900</a><br />
+                Phone: <a className="text-primary hover:underline" href="tel:+19062103796">+1 (906) 210-3796</a><br />
                 Address: 2055 Limestone Rd STE 200-C, Wilmington, DE 19808
               </p>
             </div>
