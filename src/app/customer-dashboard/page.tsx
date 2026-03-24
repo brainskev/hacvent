@@ -171,6 +171,15 @@ function CustomerDashboardContent() {
     router.push('/customer-intake?new=true')
   }
 
+  useEffect(() => {
+    if (!isLoaded || !user) return
+
+    const role = user.publicMetadata?.role
+    if (role === 'admin' || role === 'super_admin') {
+      router.replace('/admin')
+    }
+  }, [isLoaded, user, router])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50">
       <DashboardHeader isLoaded={isLoaded} userName={userName} userEmail={userEmail} />
