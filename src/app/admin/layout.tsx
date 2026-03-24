@@ -3,6 +3,8 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { isAdminRequest } from '@/lib/adminAuth'
 
+export const dynamic = 'force-dynamic'
+
 interface AdminRootLayoutProps {
   children: React.ReactNode
 }
