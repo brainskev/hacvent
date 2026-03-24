@@ -1,4 +1,4 @@
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { auth, clerkClient } from '@clerk/nextjs/server'
 
 const hasAdminRoleMetadata = (value: unknown) => {
   if (!value || typeof value !== 'object') return false
@@ -6,17 +6,35 @@ const hasAdminRoleMetadata = (value: unknown) => {
   return role === 'admin' || role === 'super_admin'
 }
 
+const hasAdminRoleClaim = (sessionClaims: unknown) => {
+  if (!sessionClaims || typeof sessionClaims !== 'object') return false
+  const claims = sessionClaims as Record<string, unknown>
+
+  // Clerk often maps public metadata into `metadata` claims.
+  if (hasAdminRoleMetadata(claims.metadata)) return true
+
+  const role = claims.role
+  return role === 'admin' || role === 'super_admin'
+}
+
 export async function isAdminRequest() {
-  const { userId } = await auth()
+  const { userId, sessionClaims } = await auth()
   if (!userId) return false
 
-  const user = await currentUser()
-  if (!user) return false
+  const isClaimAdmin = hasAdminRoleClaim(sessionClaims)
 
-  const isMetadataAdmin =
-    hasAdminRoleMetadata(user.publicMetadata) ||
-    hasAdminRoleMetadata(user.privateMetadata) ||
-    hasAdminRoleMetadata(user.unsafeMetadata)
+  try {
+    const client = await clerkClient()
+    const user = await client.users.getUser(userId)
 
-  return isMetadataAdmin
+    const isMetadataAdmin =
+      hasAdminRoleMetadata(user.publicMetadata) ||
+      hasAdminRoleMetadata(user.privateMetadata) ||
+      hasAdminRoleMetadata(user.unsafeMetadata)
+
+    return isMetadataAdmin || isClaimAdmin
+  } catch {
+    // Fallback to claims if Clerk API lookup fails transiently.
+    return isClaimAdmin
+  }
 }
