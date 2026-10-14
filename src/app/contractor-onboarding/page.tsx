@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Layout from '@/components/Layout'
-import { ArrowRight, ArrowLeft, CheckCircle } from 'lucide-react'
+import { ArrowRight, ArrowLeft, CheckCircle, FileText } from 'lucide-react'
 
 type FormState = {
   company_name: string
@@ -71,6 +72,13 @@ export default function ContractorOnboarding() {
           <p className="text-sm md:text-base text-white/90 max-w-2xl mx-auto">
             Join our contractor network and get matched with qualified homeowners seeking HVAC upgrades
           </p>
+          <Link
+            href="/contractors/pricing"
+            className="inline-flex items-center gap-2 mt-5 bg-white text-primary hover:bg-gray-100 font-semibold py-2.5 px-5 rounded-lg transition-colors"
+          >
+            <FileText className="w-4 h-4" aria-hidden="true" />
+            View contractor services and pricing
+          </Link>
           <div className="mt-4 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-3 max-w-lg mx-auto">
             <p className="text-sm font-semibold text-white">💼 Connect with customers eligible for $8K–$14K in rebates</p>
           </div>
